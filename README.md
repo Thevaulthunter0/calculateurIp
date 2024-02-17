@@ -7,4 +7,4 @@ Le calculateur IP permet de trouver plusieurs information à partir d'un IP et d
   - Dernièere adresse disponible
   - Adresse de diffusion
   - Type d'adresse(Routable, bouclage, link-local)
-Finalement, l'application permet de construire des sous-réseaux à l'aide de la technique variable. (VLSM)
+	- construire des sous-réseaux à l'aide de la technique variable. (VLSM)
