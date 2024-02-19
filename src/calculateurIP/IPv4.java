@@ -20,26 +20,28 @@ public class IPv4 {
 	}
 	
 	//Donne l'adresse de la premiere hote disponible
+	//La premiere adresse du reseau, est l'adresse reseau + 0...0001
 	public int[] premiereAdresse()
 	{
-		int[] reponse = new int[32];
-		reponse = this.reseauBin;
-		reponse[31] = 1;
+		int[] reponse = new int[32];	//Tableau a retourner
+		reponse = this.reseauBin;	
+		reponse[31] = 1;		//Ajoute un 1 a la derniere position
 		return reponse;
 	}
 	
 	//Donne l'adresse de la derniere hote disponible
-	public int[] derniereAdresse()
+	//La derniere adresse est l'adresse reseau + des 1 a partir du masque + 0 a la fin
+	public int[] derniereAdresse()	
 	{
-		int[] reponse = new int[32];
-		int x = this.masque.getIntMasque();
-		for(int i = 0; i < this.reseauBin.length - 1; i++)
+		int[] reponse = new int[32];	//Tableau a retourner
+		int x = this.masque.getIntMasque();		//Position du masque
+		for(int i = 0; i < this.reseauBin.length - 1; i++)	
 		{
-			if(i >= x && i != 32)
-			{
+			if(i >= x && i != 32)	//Temps que i est plus grand que la position du masque mais pas la derniere position
+			{						//mettre des 1.
 				reponse[i] = 1;
 			}
-			else {
+			else {					//Sinon copier l'adresse reseau
 				reponse[i] = this.reseauBin[i];
 			}
 		}
@@ -47,17 +49,18 @@ public class IPv4 {
 	}
 	
 	//Donne l'adresse de diffusion du reseau
+	//L'adresse de diffusion est l'adresse reseau + des 1 a partir du masque
 	public int[] adresseDiffusion()
 	{
-		int[] reponse = new int[32];
-		int x = this.masque.getIntMasque();
+		int[] reponse = new int[32];	//Tableau a retourner
+		int x = this.masque.getIntMasque();		//Position du masque
 		for(int i = 0; i < this.reseauBin.length; i++)
 		{
-			if(i >= x)
+			if(i >= x)		//Temps que i est plus grand que la position du masque mettre des 1
 			{
 				reponse[i] = 1;
 			}
-			else {
+			else {			//Sinon copier l'adresse reseau
 				reponse[i] = this.reseauBin[i];
 			}
 		}
@@ -68,75 +71,74 @@ public class IPv4 {
 	//pour avoir l'ip reseau en binaire.
 	private int[] operationAND(int[] bin1, int[] bin2)
 	{
-		int[] reponse = new int[32];
-		for(int i = 0; i < reponse.length; i++)
+		int[] reponse = new int[32];	//Tableau a retourner
+		for(int i = 0; i < reponse.length; i++)		//Pour chaque position du tableau de reponse
 		{
-			if(bin1[i] == 1 && bin2[i] == 1)
-			{
-				reponse[i] = 1;
+			if(bin1[i] == 1 && bin2[i] == 1)		// 1 AND 1 = 1 
+			{										// Toute autre combinaison = 0
+				reponse[i] = 1;						
 			}
 		}
 		return reponse;
 	}
 	
-	//Convertir IP(ipString) vers un tableau[32] binaire.
+	//Convertir IP(ipString) xxx.xxx.xxx.xxx vers un tableau[32] binaire.
 	private int[] convertirStringVersBin()
 	{
-		//Initialisation
-		String[] strListe = new String[4];
-		double[] dListe = new double[4];
+		String[] strListe = new String[4];	//Tableau de String pour separer les 4 octets
+		double[] dListe = new double[4];	//Tableau de double pour separer les 4 octets
 		
 		//Transforme le string en tableau de double
-		strListe = this.ipString.split("\\.");
+		strListe = this.ipString.split("\\.");		//Spliter dans le tableau de string les 4 octets avec les '.'
 		for(int i = 0; i < dListe.length; i++)
 		{
-			dListe[i] = Double.parseDouble(strListe[i]);
-		}
+			dListe[i] = Double.parseDouble(strListe[i]);	//Transformer les 4 octets en double pour pouvoir les
+		}													//utiliser dans des calculs.
 		
 		//Convertir chaque double en chiffre binaire
 		//et construit le chiffre binaire total.
-		int[] ipBin = new int[32];
-		int binPosition = 0;
-		for(int i = 0; i < dListe.length; i++)
+		int[] ipBin = new int[32];	//Tableau pour retourner
+		int binPosition = 0;	//Indique la position dans notre tableau binaire
+		for(int i = 0; i < dListe.length; i++)		//Pour chaque octet
 		{
-			int[] listeTemp = convertirDoubleVersBin(dListe[i]);
-			for(int j = 0; j < listeTemp.length; j++)
+			int[] listeTemp = convertirDoubleVersBin(dListe[i]);	//Creer un tableau temporaire pour accueilir 8 chiffres binaires
+			for(int j = 0; j < listeTemp.length; j++)	//Pour chaque byte dans le tableau temporaire
 			{
-				ipBin[binPosition] = listeTemp[j];
+				ipBin[binPosition] = listeTemp[j];	//Inserer dans notre tableau binaire les bytes du tableau temporaire
 				binPosition++;
 			}
 		}
 		return ipBin;
 	}
 	
-	//Convertir un chiffre double vers un binaire(Utiliser dans convertStringToBin)
-	private int[] convertirDoubleVersBin(double chiffre)
+	//Convertir un octet double vers un binaire(Utiliser dans convertStringVersBin)
+	private int[] convertirDoubleVersBin(double octet)
 	{
-		//Calculer le binaire en utilisant la divsion succesive
+		//Calculer le binaire d'un octet en utilisant la divsion succesive
 		double[] bitListe = new double[8];	//Tableau pour stocke les bits
 		for(int i = bitListe.length - 1; i >= 0; i--)	//Boucle de division succesive
 		{
-			if(chiffre % 2 == 0)	//Si la division du chiffre par 2 resulte a un chiffre x.0,
+			if(octet % 2 == 0)	//Si la division du chiffre par 2 resulte a un chiffre x.0,
 			{						//le binaire a cette position est de 0
 				bitListe[i] = 0.0;
 			}
-			if(chiffre % 2 != 0)	//Si la division du chiffre par 2 ne resulte pas a un chiffre x.0
+			if(octet % 2 != 0)	//Si la division du chiffre par 2 ne resulte pas a un chiffre x.0
 			{						//le binaire a cette position est de 1
 				bitListe[i] = 1.0;
 			}
-			chiffre = chiffre / 2;	//Divise le chiffre en 2
-			chiffre = Math.floor(chiffre);	//Trouve le chiffre le plus petit pret.
-			if(chiffre == 0)
+			octet = octet / 2;	//Divise le chiffre en 2
+			octet = Math.floor(octet);	//Trouve le chiffre le plus petit pret.
+			if(octet == 0)
 			{
 				break;		//Si le chiffre est egal a 0, la division succesive est fini.
 			}
 		}
 		
-		//Convertir la forme de double vers int
-		int[] intListe = new int[8];
-		for(int i = 0; i < intListe.length; i++)
+		//Convertir la forme de double vers int pour que l'affichage soit propre
+		int[] intListe = new int[8];	//Tableau qui sera retourner
+		for(int i = 0; i < intListe.length; i++)	//Boucle dans le tableau de int
 		{
-			intListe[i] = (int) bitListe[i];
+			intListe[i] = (int) bitListe[i];	//Cast de double vers int
 		}
 		
 		return intListe;
@@ -171,9 +173,9 @@ public class IPv4 {
 	public String afficherBin(int[] binaire)
 	{
 		String texte = "";
-		for(int i = 0; i < binaire.length; i++)
+		for(int i = 0; i < binaire.length; i++)	//Parcours le tableau[32]
 		{
-			if(i != 0 && i % 8 == 0)
+			if(i != 0 && i % 8 == 0)	//A chaque 8 position on met un '.'
 			{
 				texte += ".";
 			}

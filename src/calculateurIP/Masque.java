@@ -50,13 +50,13 @@ public class Masque {
 	//Calculer le nombre d'hote disponible
 	public int nbrHoteDisponible()
 	{
-		return (int) Math.pow(2,(32 - intMasque));
+		return (int) Math.pow(2,(32 - intMasque));	//= 2^(32 - masque)
 	}
 	
 	//Calculer le nombre d'hote utilisable
 	public int nbrHoteUtilisable()
 	{
-		return (int) nbrHoteDisponible() - 2;
+		return (int) nbrHoteDisponible() - 2;	//nbrHoteDisponible - 2
 	}
 	
 	//Getter 
