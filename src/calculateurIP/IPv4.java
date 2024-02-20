@@ -1,5 +1,7 @@
 package calculateurIP;
 
+import java.util.Arrays;
+
 public class IPv4 {
 	
 	//Initialisation
@@ -8,6 +10,7 @@ public class IPv4 {
 	private int[] ipBin = new int[32];
 	private String reseauString;
 	private int[] reseauBin = new int[32];
+	private String[] strListe = new String[4];
 	
 	//Constructeur
 	public IPv4(String ipString, Masque masque)
@@ -67,6 +70,59 @@ public class IPv4 {
 		return reponse;
 	}
 	
+	//Determine si l'adresse ip est un adresse locale ou publique
+	public boolean estLocal()
+	{
+		//10.0.0.0
+		if(this.strListe[0].equals("10"))
+		{	
+			return true;
+		}
+		//172.16.0.0
+		else if(this.strListe[0].equals("172") && this.strListe[1].equals("16"))
+		{
+			return true;
+		}
+		//192.168.0.0
+		else if(this.strListe[0].equals("192") && this.strListe[1].equals("168"))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	//Determine si l'adresse est un adresse de bouclage
+	public boolean estBouclage()
+	{
+		//127.x.x.x
+		if(this.strListe[0].equals("127"))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	//Determine si l'adresse est une adresse Link-local(APIPA)
+	public boolean estLinkLocal()
+	{
+		//169.254.x.x
+		if(this.strListe[0].equals("169") && this.strListe[1].equals("254"))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+	
 	//Faire une operation AND entre deux tableau[32]. Utiliser dans le constructeur
 	//pour avoir l'ip reseau en binaire.
 	private int[] operationAND(int[] bin1, int[] bin2)
@@ -85,11 +141,10 @@ public class IPv4 {
 	//Convertir IP(ipString) xxx.xxx.xxx.xxx vers un tableau[32] binaire.
 	private int[] convertirStringVersBin()
 	{
-		String[] strListe = new String[4];	//Tableau de String pour separer les 4 octets
 		double[] dListe = new double[4];	//Tableau de double pour separer les 4 octets
 		
 		//Transforme le string en tableau de double
-		strListe = this.ipString.split("\\.");		//Spliter dans le tableau de string les 4 octets avec les '.'
+		this.strListe = this.ipString.split("\\.");		//Spliter dans le tableau de string les 4 octets avec les '.'
 		for(int i = 0; i < dListe.length; i++)
 		{
 			dListe[i] = Double.parseDouble(strListe[i]);	//Transformer les 4 octets en double pour pouvoir les

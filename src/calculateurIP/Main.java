@@ -4,10 +4,11 @@ public class Main {
 
 	public static void main(String[] args) 
 	{
-		String str = "192.168.30.0";
+		String str = "209.225.161.3";
 		Masque msq = new Masque(23);
 		IPv4 ip = new IPv4(str,msq);
 		int[] reseauBin = ip.getReseauBin();
+		//System.out.println(ip.estLinkLocal());
 		//System.out.println("---\nIP:" + ip.getIpString() + "\n" + ip.afficherBin(ip.getIpBin()));
 		//System.out.println("---\nMasque" + msq.getStrMasque() + "\n" + ip.convertirBinVersString(msq.getMasqueBin())); 
 		//System.out.println(msq.afficherBin());
