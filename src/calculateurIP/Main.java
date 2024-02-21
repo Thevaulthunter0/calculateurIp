@@ -4,23 +4,15 @@ public class Main {
 
 	public static void main(String[] args) 
 	{
+		GUI.debutGUI();
 		String str = "209.225.161.3";
 		Masque msq = new Masque(23);
 		IPv4 ip = new IPv4(str,msq);
-		int[] reseauBin = ip.getReseauBin();
-		//System.out.println(ip.estLinkLocal());
-		//System.out.println("---\nIP:" + ip.getIpString() + "\n" + ip.afficherBin(ip.getIpBin()));
-		//System.out.println("---\nMasque" + msq.getStrMasque() + "\n" + ip.convertirBinVersString(msq.getMasqueBin())); 
-		//System.out.println(msq.afficherBin());
-		//System.out.println("---\nNbr hote disponible:" + msq.nbrHoteDisponible());
-		//System.out.println("---\nNbr hote utilisable:" +msq.nbrHoteUtilisable());
-		//System.out.println("---\nReseau:\n" + ip.afficherBin(ip.getReseauBin()) + "\n" + ip.convertirBinVersString(ip.getReseauBin()));
-		//System.out.println("---\nPremier hote:\n" + ip.afficherBin(ip.premiereAdresse()) + "\n" + ip.convertirBinVersString(ip.premiereAdresse()));
-		//System.out.println("---\nDerniere hote:\n" + ip.afficherBin(ip.derniereAdresse()) + "\n" + ip.convertirBinVersString(ip.derniereAdresse()));
-		//System.out.println("---\nAddresse diffusion:\n" + ip.afficherBin(ip.adresseDiffusion()) + "\n" + ip.convertirBinVersString(ip.adresseDiffusion()));
+		//ip.afficherInformation();
+		
 		int[] nbrHotesDemande = {120,90,60,30,24,24,20};
 		int[] nbrHotes = convertirNombreHote(nbrHotesDemande);
-		SousReseauxIPv4 sousReseau = valideSousReseauIPv4(msq, reseauBin,nbrHotes);
+		SousReseauxIPv4 sousReseau = valideSousReseauIPv4(msq, ip.getReseauBin(),nbrHotes);
 		//for(int i = 0; i < nbrHotes.length; i++)
 		//{
 		//	System.out.println(nbrHotes[i]);

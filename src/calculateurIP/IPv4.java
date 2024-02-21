@@ -6,11 +6,11 @@ public class IPv4 {
 	
 	//Initialisation
 	private Masque masque;
-	private String ipString;
-	private int[] ipBin = new int[32];
-	private String reseauString;
-	private int[] reseauBin = new int[32];
-	private String[] strListe = new String[4];
+	private String ipString;					// l'adresse en string entree pas l'utilisateur xxx.xxx.xxx.xxx
+	private int[] ipBin = new int[32];			// les 32 bits de l'adresse entree par l'utilisateur
+	private String reseauString;				// l'adresse reseau en string xxx.xxx.xxx.xxx
+	private int[] reseauBin = new int[32];		// les 32 bits de l'adresse reseau
+	private String[] strListe = new String[4];	// les 4 octets sous forme string
 	
 	//Constructeur
 	public IPv4(String ipString, Masque masque)
@@ -20,6 +20,21 @@ public class IPv4 {
 		this.ipBin = convertirStringVersBin();
 		this.reseauBin = operationAND(this.ipBin, this.masque.getMasqueBin());
 		this.reseauString = convertirBinVersString(this.reseauBin);
+	}
+	
+	//Afficher les informations du calculateur
+	public void afficherInformation()
+	{
+		System.out.println("Nombre d'adresse disponible : " + masque.nbrHoteDisponible()
+		+ "\nNombre d'adresse utilisable : " + masque.nbrHoteUtilisable()
+		+ "\nAdresse du masque : " + convertirBinVersString(masque.getMasqueBin())
+		+ "\nAdresse du reseau : " + this.reseauString
+		+ "\nPremiere adresse : " + convertirBinVersString(premiereAdresse())
+		+ "\nDerniere adresse : " + convertirBinVersString(derniereAdresse())
+		+ "\nAdresse diffusion : " + convertirBinVersString(adresseDiffusion())
+		+ "\nAdresse local? : " + estLocal()
+		+ "\nAdresse de bouclage? : " + estBouclage()
+		+ "\nAdresse est linkLocal? : " + estLinkLocal()); 
 	}
 	
 	//Donne l'adresse de la premiere hote disponible

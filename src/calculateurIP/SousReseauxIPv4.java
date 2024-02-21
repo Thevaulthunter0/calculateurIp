@@ -13,7 +13,7 @@ public class SousReseauxIPv4 {
 		this.nbrHotes = nbrHotes;
 	}
 	
-	//Method permettant de trouver les sous Reseaux et les stocker dans un tableau[nbrSousReseau][32].
+	//Methode permettant de trouver les sous Reseaux et les stocker dans un tableau[nbrSousReseau][32].
 	public int[][] trouverSousReseaux()
 	{
 		int[][] adresseSousReseau = new int[nbrHotes.length][32];	//Tableau utiliser pour etre retourner contenant les sous reseaux 
