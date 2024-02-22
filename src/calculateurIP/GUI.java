@@ -89,10 +89,10 @@ public class GUI {
 			choixValide = false;
 			while(!choixValide)
 			{
-				System.out.println("Entrer votre masque. Un chiffre entre 23 et 30.");
+				System.out.println("Entrer votre masque.");
 				try {
 					masque = scan.nextInt();
-					if(masque < 23 || masque > 30)
+					if(masque < 1 || masque > 31)
 					{
 						System.out.println("Erreur, le masque n'est pas valide.");
 					}
@@ -106,23 +106,19 @@ public class GUI {
 			Masque msq = new Masque(masque);
 			IPv4 ipv4 = new IPv4(ip, msq);
 			ipv4.afficherInformation();
-			
-			//
-			//Fonction de sous-reseau
-			//
-			//sousReseauIPv4GUI();
+			sousReseauIPv4GUI(ipv4, msq);
 			
 		} while(choix != 0);
 	}
 	
-	static void sousReseauIPv4GUI()
+	static void sousReseauIPv4GUI(IPv4 ip, Masque masque)
 	{
 		boolean choixValide = false;
 		int nbrSousReseau = 1;
 		//Nombre de sous reseau
 		while(!choixValide)
 		{
-			System.out.println("Combien de sous reseau voulez-vous faire?");
+			System.out.println("Combien de sous reseaux voulez-vous faire?");
 			try {
 				nbrSousReseau = scan.nextInt();
 				if(nbrSousReseau < 1)
@@ -142,10 +138,10 @@ public class GUI {
 		{
 			while(!choixValide)
 			{
-				System.out.println("Qu'elle est le nombre d'hote pour le sous reseau " + i);
+				System.out.println("Qu'elle est le nombre d'hote pour le sous reseau " + i + "?");
 				try {
 					nbrHotesDemande[i]= scan.nextInt();
-					if(nbrHotesDemande[i] >= 1)
+					if(nbrHotesDemande[i] < 1)
 					{
 						System.out.println("Il doit avoir au moins 1 hote dans un sous reseau.");
 					}
@@ -159,8 +155,15 @@ public class GUI {
 			choixValide = false;
 		}
 		//
-		// ordonne(plus grand au plus petit) ,valider, convertir, creer objet sousReseauIPv4, afficher 
+		// ordonne(plus grand au plus petit) 
 		//
+		int[] nbrHotes = convertirNombreHote(nbrHotesDemande);
+		SousReseauxIPv4 sousReseau = valideSousReseauIPv4(masque, ip.getReseauBin(), nbrHotes);
+		int[][] lesSousReseau = sousReseau.trouverSousReseaux();
+		for(int i = 0; i < lesSousReseau.length; i++)
+		{
+			System.out.println(nbrHotesDemande[i] + " : " + ip.convertirBinVersString(lesSousReseau[i]));
+		}
 	}
 	
 	static void IPv6GUI()

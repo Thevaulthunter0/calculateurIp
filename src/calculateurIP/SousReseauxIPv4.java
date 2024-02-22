@@ -17,11 +17,11 @@ public class SousReseauxIPv4 {
 	public int[][] trouverSousReseaux()
 	{
 		int[][] adresseSousReseau = new int[nbrHotes.length][32];	//Tableau utiliser pour etre retourner contenant les sous reseaux 
-		adresseSousReseau[0] = this.reseauBin;	//Le premier plus gros sous reseau utilise l'adresse de base
+		adresseSousReseau[0] = this.reseauBin;		//Le premier plus gros sous reseau utilise l'adresse de base
 		for(int i = 1; i < nbrHotes.length; i++)	//Pour chaque sous reseau demande
 		{
 			//Additionne l'ip du sous reseau precedent au tableau du masque(construireTab) du sous reseau precedent
-			adresseSousReseau[i] = additionBin(adresseSousReseau[i - 1],construireTab(trouverMasque(this.nbrHotes[i - 1])));
+			adresseSousReseau[i] = additionBin(adresseSousReseau[i - 1], construireTab(trouverMasque(this.nbrHotes[i - 1])));
 		}
 		return adresseSousReseau;
 	}
