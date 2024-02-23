@@ -74,10 +74,25 @@ public class GUI {
 				System.out.println("Entrer votre addresse IPv4(xxx.xxx.xxx.xxx)");
 				try {
 					ip = scan.next();
-					//
-					//Ajouter une verification avec un regex pour que l'ip est la bonne forme
-					//
-					choixValide = true;
+
+					if (!ip.matches("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}")) {  //ip doit avoir 3 places de nombres suivi par ':' et un dernier groupe de 3 places de nombres
+						continue;
+
+						//si ip est dans le bon format, vérifie si les chiffres sont entre 0-255
+					} else {
+						String[] ipSplit = ip.split("\\.");
+						int[] ipSplitInt = new int[ipSplit.length];
+						for (int i=0; i< ipSplit.length; i++) {
+							ipSplitInt[i] = Integer.parseInt(ipSplit[i]);
+						}
+
+						for (int i=0; i< ipSplitInt.length; i++) {
+							if (ipSplitInt[i] < 0 || ipSplitInt[i] > 255) {
+								continue;
+							} else  choixValide = true;
+						}
+					}
+
 				}catch(Exception e)
 				{
 					System.out.println("Erreur: " + e);
@@ -167,12 +182,57 @@ public class GUI {
 	{
 		//Initialisation
 		int choix = 0;
+		int prefix = 64;
+		String ip = "";
 		boolean choixValide = false;
+
+		//Debut
 		do {
+			//Demande de IP
 			while(!choixValide)
 			{
-				
+				System.out.println("Entrer votre addresse IPv6(xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx)");
+				try {
+					ip = "2001:2002:0fed:ffff:0000:0000:0000:0001"; //pour testing
+//					ip = scan.next();
+
+					if (!ip.matches("^(?:[0-9a-fA-F$]{1,4}:){7}[0-9a-fA-F$]{1,4}")) {  //ip doit avoir
+						continue;
+					} else choixValide = true;
+
+				}catch(Exception e)
+				{
+					System.out.println("Erreur: " + e);
+					scan.next();
+				}
 			}
+
+			//Demande du préfixe
+			choixValide = false;
+			while(!choixValide)
+			{
+				System.out.println("Entrer votre préfixe. Un chiffre entre 1 et 128.");
+				try {
+					prefix = scan.nextInt();
+					if(prefix < 1 || prefix > 128)
+					{
+						System.out.println("Erreur, le masque n'est pas valide.");
+					}
+					else choixValide = true;
+				}catch(Exception e)
+				{
+					System.out.println("Erreur: " + e);
+					scan.next();
+				}
+			}
+			IPv6 ipv6 = new IPv6(ip, prefix);
+			ipv6.afficherInformation();
+
+			//
+			//Fonction de sous-reseau
+			//
+			//sousReseauIPv4GUI();
+
 		} while(choix != 0);
 	}
 	
