@@ -42,8 +42,14 @@ public class IPv4 {
 	public int[] premiereAdresse()
 	{
 		int[] reponse = new int[32];	//Tableau a retourner
-		reponse = this.reseauBin;	
-		reponse[31] = 1;		//Ajoute un 1 a la derniere position
+		for(int i = 0; i < this.reseauBin.length - 1; i++)
+		{
+			reponse[i] = reseauBin[i];
+			if(i == 31)
+			{
+				reponse[i] = 1;		//Ajoute un 1 a la derniere position
+			}
+		}
 		return reponse;
 	}
 	
