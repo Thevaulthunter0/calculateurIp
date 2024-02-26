@@ -1,6 +1,8 @@
 package calculateurIP;
 
 import java.util.Scanner;
+import java.lang.String;
+import calculateurIP.Masque;
 
 public class GUI {
 	

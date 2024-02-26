@@ -1,6 +1,6 @@
 package calculateurIP;
 
-import java.util.Arrays;
+
 
 public class IPv4 {
 	
