@@ -1,5 +1,8 @@
 package calculateurIP;
 
+import java.lang.String;
+import java.lang.Math;
+
 public class SousReseauxIPv4 {
 	
 	//Initialisation

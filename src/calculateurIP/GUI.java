@@ -2,7 +2,7 @@ package calculateurIP;
 
 import java.util.Scanner;
 import java.lang.String;
-import calculateurIP.Masque;
+import java.lang.Math;
 
 public class GUI {
 	
