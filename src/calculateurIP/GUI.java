@@ -128,8 +128,34 @@ public class GUI {
 			Masque msq = new Masque(masque);
 			IPv4 ipv4 = new IPv4(ip, msq);
 			ipv4.afficherInformation();
-			sousReseauIPv4GUI(ipv4, msq);
 			
+			//Demande si l'utilisateur veut creer des sous-reseau
+			choixValide = false;
+			String reponse = "";
+			while(!choixValide)
+			{
+				System.out.println("Voulez-vous faire des sous-reseau?(o-oui, n-non)");
+				try {
+					reponse = scan.next();
+					if(reponse.equals("o") && reponse.equals("n"))
+					{
+						System.out.println("Erreur, repondre avec o(oui) ou n(non).");
+					}
+					else choixValide = true;
+				}catch(Exception e)
+				{
+					System.out.println("Erreur: " + e);
+					scan.next();
+				}
+			}
+			if(reponse.equals("o"))
+			{
+				sousReseauIPv4GUI(ipv4, msq);
+			}
+			if(reponse.equals("n"))
+			{
+				break;
+			}
 		} while(choix != 0);
 	}
 	
@@ -137,6 +163,7 @@ public class GUI {
 	{
 		boolean choixValide = false;
 		int nbrSousReseau = 1;
+		
 		//Nombre de sous reseau
 		while(!choixValide)
 		{
@@ -154,18 +181,20 @@ public class GUI {
 				scan.next();
 			}
 		}
+		
+		//Demande du nombre d'hotes par sous-reseau
 		choixValide = false;
 		int[] nbrHotesDemande = new int[nbrSousReseau];
 		for(int i = 0; i < nbrSousReseau; i++)
 		{
 			while(!choixValide)
 			{
-				System.out.println("Qu'elle est le nombre d'hote pour le sous reseau " + i + "?");
+				System.out.println("Qu'elle est le nombre d'hote utilisable pour le sous reseau " + (i + 1) + "?");
 				try {
-					nbrHotesDemande[i]= scan.nextInt();
-					if(nbrHotesDemande[i] < 1)
+					nbrHotesDemande[i]= scan.nextInt() + 2;
+					if(nbrHotesDemande[i] < 3)
 					{
-						System.out.println("Il doit avoir au moins 1 hote dans un sous reseau.");
+						System.out.println("Il doit avoir au moins 1 hote utilisable dans un sous reseau.");
 					}
 					else choixValide = true;
 				} catch(Exception e)
@@ -176,15 +205,15 @@ public class GUI {
 			}
 			choixValide = false;
 		}
-		//
-		// ordonne(plus grand au plus petit) 
-		//
-		int[] nbrHotes = convertirNombreHote(nbrHotesDemande);
-		SousReseauxIPv4 sousReseau = valideSousReseauIPv4(masque, ip.getReseauBin(), nbrHotes);
-		int[][] lesSousReseau = sousReseau.trouverSousReseaux();
+		
+		nbrHotesDemande = triBulleInverse(nbrHotesDemande);		//Ordonne pour le calcul du VSML
+		
+		int[] nbrHotes = convertirNombreHote(nbrHotesDemande);	//Convertir le nombre hote demande vers le nombre hote reel
+		SousReseauxIPv4 sousReseau = valideSousReseauIPv4(masque, ip.getReseauBin(), nbrHotes);	//Valider avant de creer l'objet
+		int[][] lesSousReseau = sousReseau.trouverSousReseaux();	//Matrice representant binairement chaque adresse de chaque sous-reseau
 		for(int i = 0; i < lesSousReseau.length; i++)
 		{
-			System.out.println(nbrHotesDemande[i] + " : " + ip.convertirBinVersString(lesSousReseau[i]));
+			System.out.println(nbrHotesDemande[i] + " : " + ip.convertirBinVersString(lesSousReseau[i]));	//Afficher chaque sous-reseau
 		}
 	}
 	
@@ -206,7 +235,7 @@ public class GUI {
 //					ip = "2001:0db8:85a3:0000:0000:8a2e:0370:7334"; //pour testing
 					ip = scan.next();
 
-					if (!ip.matches("^(?:[0-9a-fA-F$]{1,4}:){7}[0-9a-fA-F$]{1,4}")) {  //ip doit avoir
+					if (!ip.matches("^(?:[0-9a-fA-F$]{1,4}:){7}[0-9a-fA-F$]{1,4}")) {
 						continue;
 					} else choixValide = true;
 
@@ -309,7 +338,7 @@ public class GUI {
 //	}
 	
 	//Valide la demande du nombre d'hotes avec le masque et creer un objet SousReseauxIPv4.
-	public static SousReseauxIPv4 valideSousReseauIPv4(Masque masque,int[] reseauBin, int[] nbrHotes)
+	private static SousReseauxIPv4 valideSousReseauIPv4(Masque masque,int[] reseauBin, int[] nbrHotes)
 	{
 		int nbrHoteDemande = 0;
 		for(int i = 0; i < nbrHotes.length; i++)			//Calculer le nombre total hote
@@ -331,9 +360,9 @@ public class GUI {
 		}
 	}
 	
-	//Permet de trouver le nombre d'hote qui sera rellement utiliser dans les sous-reseaux
-	//en utilisant l'arrondissement a la puissance 2
-	public static int[] convertirNombreHote(int[] nbrHoteDemande)
+	//Permet de trouver le nombre d'hote qui sera reellement utiliser dans les sous-reseaux
+	//en utilisant l'arrondissement a la puissance 2 ex:200 hotes demandes = 256 hotes reellements utilises
+	private static int[] convertirNombreHote(int[] nbrHoteDemande)
 	{
 		int[] nbrHote = new int[nbrHoteDemande.length];
 		for(int i = 0; i < nbrHoteDemande.length; i++)
@@ -346,5 +375,25 @@ public class GUI {
 			nbrHote[i] = (int) Math.pow(2,hoteAvantPow);
 		}
 		return nbrHote;
+	}
+	
+	//Permet de trier du plus grand au plus petit les inputs de l'utilisateurs avec la methode du tri par bulle
+	private static int[] triBulleInverse(int[] nbrHotesDemande)
+	{
+		int n = nbrHotesDemande.length;
+		for(int i = 0; i < n - 1; i++)
+		{
+			for(int j = 0; j < n - 1 - i; j++)
+			{
+				if(nbrHotesDemande[j] < nbrHotesDemande[j+1])		//Si la valeur de gauche est plus petite que la valeur de droite
+				{
+					int temporaire = nbrHotesDemande[j];			//Garder en memoire temporaire la valeur
+					nbrHotesDemande[j] = nbrHotesDemande[j + 1];	//Echanger la position des deux valeurs
+					nbrHotesDemande[j + 1] = temporaire;			//Donner la valeur initiale de gauche a la position de droite
+				}
+			}
+
+		}
+		return nbrHotesDemande;
 	}
 }
