@@ -1,5 +1,6 @@
 package calculateurIP;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class GUI {
@@ -76,20 +77,24 @@ public class GUI {
 					ip = scan.next();
 
 					if (!ip.matches("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}")) {  //ip doit avoir 3 places de nombres suivi par ':' et un dernier groupe de 3 places de nombres
+						System.out.println("Votre adresse doit avoir 4 octets en entiers, séparés par un point.");
 						continue;
 
 						//si ip est dans le bon format, vérifie si les chiffres sont entre 0-255
 					} else {
-						String[] ipSplit = ip.split("\\.");
-						int[] ipSplitInt = new int[ipSplit.length];
+						String[] ipSplit = ip.split("\\.");			//obtient un array de 4 octets en chaîne de caractères
+						int[] ipSplitInt = new int[ipSplit.length];			//obtient un array de 4 octets en entier
 						for (int i=0; i< ipSplit.length; i++) {
 							ipSplitInt[i] = Integer.parseInt(ipSplit[i]);
 						}
 
-						for (int i=0; i< ipSplitInt.length; i++) {
-							if (ipSplitInt[i] < 0 || ipSplitInt[i] > 255) {
-								continue;
-							} else  choixValide = true;
+						for (int i : ipSplitInt) {
+							if (i < 0 || i > 255) {							//vérifier que chaque octet est entre 0 et 255
+								System.out.println("Chaque octet doit être entre 0 et 255.");
+								break;
+							} else  {
+								choixValide = true;
+							}
 						}
 					}
 
@@ -196,8 +201,8 @@ public class GUI {
 			{
 				System.out.println("Entrer votre addresse IPv6(xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx)");
 				try {
-					ip = "2001:2002:0fed:ffff:0000:0000:0000:0001"; //pour testing
-//					ip = scan.next();
+//					ip = "2001:0db8:85a3:0000:0000:8a2e:0370:7334"; //pour testing
+					ip = scan.next();
 
 					if (!ip.matches("^(?:[0-9a-fA-F$]{1,4}:){7}[0-9a-fA-F$]{1,4}")) {  //ip doit avoir
 						continue;
@@ -230,14 +235,76 @@ public class GUI {
 			}
 			IPv6 ipv6 = new IPv6(ip, prefix);
 			ipv6.afficherInformation();
-
-			//
-			//Fonction de sous-reseau
-			//
-			//sousReseauIPv4GUI();
+//			sousReseauIPv6GUI(ipv6);
 
 		} while(choix != 0);
 	}
+
+//	static void sousReseauIPv6GUI(IPv6 ipv6)
+//	{
+//		boolean choixValide = false;
+//		int nbrSousReseau = 1;
+//		//Nombre de sous reseau
+//		while(!choixValide)
+//		{
+//			System.out.println("Combien de sous reseaux voulez-vous faire?");
+//			try {
+//				nbrSousReseau = scan.nextInt();
+//				if(nbrSousReseau < 1)
+//				{
+//					System.out.println("Erreur, il vous faut au moins 2 sous reseaux.");
+//				}
+//				else choixValide = true;
+//			} catch(Exception e)
+//			{
+//				System.out.println("Erreur," + e);
+//				scan.next();
+//			}
+//		}
+//		choixValide = false;
+//		int[] nbrHotesDemande = new int[nbrSousReseau];
+//
+//		System.out.println("Vous avez besoin de plus que 65536 hôtes dans un sous-réseau? O pour oui/N pour non");
+//		String reponse = scan.next();
+//		if (reponse.equalsIgnoreCase("n")) {
+//			choixValide = true;
+//		} else {
+//			for(int i = 0; i < nbrSousReseau; i++)
+//			{
+//				while(!choixValide)
+//				{
+//					System.out.println("Qu'elle est le nombre d'hote pour le sous reseau " + i + "?");
+//					try {
+//						nbrHotesDemande[i]= scan.nextInt();
+//						if(nbrHotesDemande[i] < 1)
+//						{
+//							System.out.println("Il doit avoir au moins 1 hote dans un sous reseau.");
+//						}
+//						else choixValide = true;
+//					} catch(Exception e)
+//					{
+//						System.out.println("Erreur," + e);
+//						scan.next();
+//					}
+//				}
+//				choixValide = false;
+//			}
+//
+//			int[] sousReseauArray = Arrays.stream(nbrHotesDemande).map(x -> (int)Math.pow(2, (x/65536))).toArray(); //nbr de
+//		}
+//
+//
+//		//
+//		// ordonne(plus grand au plus petit)
+//		//
+//		int[] nbrHotes = convertirNombreHote(nbrHotesDemande);
+//		SousReseauxIPv4 sousReseau = valideSousReseauIPv4(masque, ip.getReseauBin(), nbrHotes);
+//		int[][] lesSousReseau = sousReseau.trouverSousReseaux();
+//		for(int i = 0; i < lesSousReseau.length; i++)
+//		{
+//			System.out.println(nbrHotesDemande[i] + " : " + ip.convertirBinVersString(lesSousReseau[i]));
+//		}
+//	}
 	
 	//Valide la demande du nombre d'hotes avec le masque et creer un objet SousReseauxIPv4.
 	public static SousReseauxIPv4 valideSousReseauIPv4(Masque masque,int[] reseauBin, int[] nbrHotes)
