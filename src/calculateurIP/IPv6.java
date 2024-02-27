@@ -390,15 +390,15 @@ public class IPv6 {
         String IPv6SansPoints = obtientIPv6SansPoints();                            //obtient l'adresse IP en hexadécimal sans ':'
         String adresseDernier = "";
 
-        for (int i=0; i<this.prefix/4;i++) {
+        for (int i=0; i<this.prefix/4-1;i++) {
             adresseDernier += IPv6SansPoints.charAt(i);              //garder la partie à gauche du global routing adresse
         }
 
         String newQuatreBitStr = "";
-        char c = IPv6SansPoints.charAt(this.prefix/4);                          //caractère au bit qui est changeable selon prefix
+        char c = IPv6SansPoints.charAt(this.prefix/4-1);                          //caractère au bit qui est changeable selon prefix
         int num = convertirHexDigitADec(c);                                     //convertir ce hexDigit en entier
 
-        if (IPv6SansPoints.charAt(this.prefix/4)!='0') {
+        if (IPv6SansPoints.charAt(this.prefix/4-1)!='0') {
             String quatreBitString = convertirDecABin(num);                     //obtient la forme binaire de ce hexDigit
             int restant = this.prefix % 4;
             for (int i=0; i<restant; i++) {                                           //garder les bits à gauche
@@ -415,7 +415,7 @@ public class IPv6 {
 
         adresseDernier += newHex;
 
-        for (int i=this.prefix/4+1; i<TOTAL_BITS_IPV6/4; i++) {
+        for (int i=this.prefix/4; i<TOTAL_BITS_IPV6/4; i++) {
             adresseDernier += "f";
         }
 
