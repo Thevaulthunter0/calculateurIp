@@ -2,6 +2,7 @@ package calculateurIP;
 
 import java.math.BigInteger;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 
 public class IPv6 {
 
@@ -37,7 +38,7 @@ public class IPv6 {
                 + "\nAdresse reseau (courte) : " + getIPv6LongToShort(new IPv6(getIPv6AddressReseauLong(), this.prefix))
 
                 + "\n\nPremiere adresse (longue) : " + getIPv6AddressReseauLong()//trouverPremierAdresse()
-                + "\nPremiere adresse (courte) : " + getIPv6LongToShort(new IPv6(trouverPremierAdresse(), this.prefix))
+                + "\nPremiere adresse (courte) : " + getIPv6LongToShort(new IPv6(getIPv6AddressReseauLong(), this.prefix))
 
                 + "\n\nDerniere adresse (longue) : " + trouverDerniereAdresse()
                 + "\nDerniere adresse (courte) : " + getIPv6LongToShort(new IPv6(trouverDerniereAdresse(), this.prefix))
@@ -130,11 +131,13 @@ public class IPv6 {
 
         IPv6String += newHex;                                                       //ajouter le hexDigit converi
 
-        for (int i = this.prefix/4+1; i<INTERFACE_ID/4-1; i++) {                  //Le reste sont des '0'
-            IPv6String += "0";
-        }
+//        for (int i = this.prefix/4; i<INTERFACE_ID/4; i++) {                  //Le reste sont des '0'
+////            for (int i = this.prefix/4+1; i<INTERFACE_ID/4-1; i++) {                  //Le reste sont des '0'
+//
+//                IPv6String += "0";
+//        }
 //        IPv6String += "1";                                                        //***SI LE PREMIER SOUS-RÉSEAU EST 1 SINON SI PREMIER SOUS-RÉSEAU EST L'ADRESSE RÉSEAU c'EST 0
-        for (int i = INTERFACE_ID/4 + 1; i<TOTAL_BITS_IPV6/4; i++) {                  //Le reste sont des '0'
+        for (int i = this.prefix/4+1; i<TOTAL_BITS_IPV6/4; i++) {                  //Le reste sont des '0'
             IPv6String += "0";
         }
 
@@ -170,7 +173,7 @@ public class IPv6 {
         }
         return str;
     }
-    private String convertirDecABin(BigInteger bi) {
+    private String convertirDecABin(BigInteger bi) {                  //obtient la forme binaire des BigInteger
         String str = "";
         int nbDeDigitBin = bi.bitLength();
             for (int i=nbDeDigitBin-1; i>= 0; i--) {
@@ -229,32 +232,10 @@ public class IPv6 {
             for (int i=0; i<this.prefix/4;i++) {
                 adresseDernierSousReseau += IPv6SansPoints.charAt(i);              //garder la partie à gauche du global routing adresse
             }
+            String nbSousReseauBin = convertirDecABin(nbrSousreseauxDisponible().subtract(new BigInteger("1")));
+            String nbSousReseauHex = convertirBinAHex(nbSousReseauBin);
 
-            String newQuatreBitStr = "";
-            char c = IPv6SansPoints.charAt(this.prefix/4);                          //caractère au bit qui est changeable selon prefix
-            int num = convertirHexDigitADec(c);                                     //convertir ce hexDigit en entier
-
-            if (IPv6SansPoints.charAt(this.prefix/4)!='0') {
-                String quatreBitString = convertirDecABin(num);                     //obtient la forme binaire de ce hexDigit
-
-                int restant = this.prefix % 4;
-                for (int i=0; i<restant; i++) {                                           //garder les bits à gauche
-                    newQuatreBitStr += quatreBitString.charAt(i);
-                }
-                for (int i=restant; i<4; i++) {                                           //mettre les bits à droite à '1'
-                    newQuatreBitStr += "1";
-                }
-            } else {
-                newQuatreBitStr = "0000";
-            }
-
-            String newHex = convertirBinAHex(newQuatreBitStr);                      //convertir les 4 bits en hexDigit
-
-            adresseDernierSousReseau += newHex;                                     //ajouter le hexDigit au chaine de caractère
-
-            for (int i=this.prefix/4+1; i<INTERFACE_ID/4; i++) {                    //mettre les 'f' jusqu'à la fin de la fin du partie réseau
-                adresseDernierSousReseau += "f";
-            }
+            adresseDernierSousReseau += nbSousReseauHex;
 
             for (int i=INTERFACE_ID/4; i<IPv6SansPoints.length();i++) {            //mettre '0's jusqu'à la fin de la fin
                 adresseDernierSousReseau += "0";
@@ -351,7 +332,6 @@ public class IPv6 {
             str += (IPv6Array[i].equals("0000")) ? "0:" : ":";                      //si hextet contient 4 "0"s, concatène "0:" sinon ":"
             IPv6ArrayClone[i] = str;                                                //ajoute au nouveau tableau à la même indice/position
         }
-
         String str = "";                                                            //pour le dernier hextet
         for (int i=0; i < 4; i++) {                                                 //faire pareil mais ne pas afficher ':' à la fin
             if (IPv6Array[IPv6Array.length-1].charAt(i)!='0') {
