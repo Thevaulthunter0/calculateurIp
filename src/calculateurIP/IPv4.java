@@ -1,6 +1,7 @@
 package calculateurIP;
 
-import java.util.Arrays;
+import java.lang.String;
+import java.lang.Math;
 
 public class IPv4 {
 	
@@ -42,7 +43,7 @@ public class IPv4 {
 	public int[] premiereAdresse()
 	{
 		int[] reponse = new int[32];	//Tableau a retourner
-		for(int i = 0; i < this.reseauBin.length - 1; i++)
+		for(int i = 0; i < this.reseauBin.length; i++)
 		{
 			reponse[i] = reseauBin[i];
 			if(i == 31)
