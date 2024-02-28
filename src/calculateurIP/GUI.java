@@ -157,13 +157,14 @@ public class GUI {
 		}
 		choixValide = false;
 		int[] nbrHotesDemande = new int[nbrSousReseau];
+		System.out.println("ne pas inclure l'adresse et diffusion");
 		for(int i = 0; i < nbrSousReseau; i++)
 		{
 			while(!choixValide)
 			{
 				System.out.println("Qu'elle est le nombre d'hote pour le sous reseau " + i + "?");
 				try {
-					nbrHotesDemande[i]= scan.nextInt();
+					nbrHotesDemande[i]= scan.nextInt() + 2;
 					if(nbrHotesDemande[i] < 1)
 					{
 						System.out.println("Il doit avoir au moins 1 hote dans un sous reseau.");

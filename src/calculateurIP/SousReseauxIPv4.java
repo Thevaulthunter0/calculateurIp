@@ -18,7 +18,7 @@ public class SousReseauxIPv4 {
 	{
 		int[][] adresseSousReseau = new int[nbrHotes.length][32];	//Tableau utiliser pour etre retourner contenant les sous reseaux 
 		adresseSousReseau[0] = this.reseauBin;		//Le premier plus gros sous reseau utilise l'adresse de base
-		for(int i = 1; i < nbrHotes.length; i++)	//Pour chaque sous reseau demande
+		for(int i = 1; i < nbrHotes.length; i++)	//Pour chaque sous reseau suivasnt demande
 		{
 			//Additionne l'ip du sous reseau precedent au tableau du masque(construireTab) du sous reseau precedent
 			adresseSousReseau[i] = additionBin(adresseSousReseau[i - 1], construireTab(trouverMasque(this.nbrHotes[i - 1])));
@@ -33,13 +33,15 @@ public class SousReseauxIPv4 {
 	}
 	
 	//Construire le tableau[32] du masque pour etre additionner au sous reseau d'avant
-	//ex:00000000.00000000.00000001.000000000 pour /25, indique la derniere position avant le masque(masque - 1)
+	//ex:00000000.00000000.00000001.00000000 pour /24, indique la position du masque(masque - 1 parcqu'on commence a 0)
+	//                       
 	public int[] construireTab(int intMasque)
 	{
 		int[] reponse = new int[32];	//Tableau utilise pour etre retourner
 		for(int i = 0; i < 32 ; i++)	//On parcour le tableau[32]
 		{
-			if(i == intMasque - 1)		//indique la derniere position avant le masque
+			if(i == intMasque - 1)		//indique la position du masque
+				
 			{							
 				reponse[i] = 1;			
 			}
