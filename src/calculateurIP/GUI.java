@@ -1,7 +1,10 @@
 package calculateurIP;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Scanner;
+
+import static java.lang.String.valueOf;
 
 public class GUI {
 	
@@ -235,77 +238,50 @@ public class GUI {
 			}
 			IPv6 ipv6 = new IPv6(ip, prefix);
 			ipv6.afficherInformation();
-//			sousReseauIPv6GUI(ipv6);
+			sousReseauIPv6GUI(ipv6);
 
 		} while(choix != 0);
 	}
 
-//	static void sousReseauIPv6GUI(IPv6 ipv6)
-//	{
-//		boolean choixValide = false;
-//		int nbrSousReseau = 1;
-//		//Nombre de sous reseau
-//		while(!choixValide)
-//		{
-//			System.out.println("Combien de sous reseaux voulez-vous faire?");
+	static void sousReseauIPv6GUI(IPv6 ipv6)
+	{
+		boolean choixValide = false;
+		int nbrSousReseau = 1;
+		//Nombre de sous reseau
+		while(!choixValide)
+		{
+			System.out.println("Combien de sous reseaux voulez-vous faire?");
 //			try {
-//				nbrSousReseau = scan.nextInt();
-//				if(nbrSousReseau < 1)
-//				{
-//					System.out.println("Erreur, il vous faut au moins 2 sous reseaux.");
-//				}
-//				else choixValide = true;
+				nbrSousReseau = scan.nextInt();
+
+				if(nbrSousReseau < 1) {
+					System.out.println("Erreur, il vous faut au moins 2 sous reseaux.");
+				}
+
+				else {
+
+					BigInteger nbSousReseauDispo = ipv6.nbrSousreseauxDisponible();
+					BigInteger nbSousReseauDispoBi = new BigInteger(String.valueOf(nbrSousReseau));
+					if (ipv6.nbrSousreseauxDisponible().compareTo(nbSousReseauDispoBi)==-1) {//si client demande plus que nbr de sous-réseaux disponible
+						System.out.println("Il y a seulement " + ipv6.nbrSousreseauxDisponibleFormatted(nbSousReseauDispo) + " disponibles");
+						continue;
+					} else {
+						System.out.println("I AM HERE");
+						ipv6.afficherSousReseauxIPv6(nbrSousReseau);
+						choixValide = true;
+					}
+				}
+
 //			} catch(Exception e)
 //			{
 //				System.out.println("Erreur," + e);
 //				scan.next();
 //			}
-//		}
-//		choixValide = false;
-//		int[] nbrHotesDemande = new int[nbrSousReseau];
-//
-//		System.out.println("Vous avez besoin de plus que 65536 hôtes dans un sous-réseau? O pour oui/N pour non");
-//		String reponse = scan.next();
-//		if (reponse.equalsIgnoreCase("n")) {
-//			choixValide = true;
-//		} else {
-//			for(int i = 0; i < nbrSousReseau; i++)
-//			{
-//				while(!choixValide)
-//				{
-//					System.out.println("Qu'elle est le nombre d'hote pour le sous reseau " + i + "?");
-//					try {
-//						nbrHotesDemande[i]= scan.nextInt();
-//						if(nbrHotesDemande[i] < 1)
-//						{
-//							System.out.println("Il doit avoir au moins 1 hote dans un sous reseau.");
-//						}
-//						else choixValide = true;
-//					} catch(Exception e)
-//					{
-//						System.out.println("Erreur," + e);
-//						scan.next();
-//					}
-//				}
-//				choixValide = false;
-//			}
-//
-//			int[] sousReseauArray = Arrays.stream(nbrHotesDemande).map(x -> (int)Math.pow(2, (x/65536))).toArray(); //nbr de
-//		}
-//
-//
-//		//
-//		// ordonne(plus grand au plus petit)
-//		//
-//		int[] nbrHotes = convertirNombreHote(nbrHotesDemande);
-//		SousReseauxIPv4 sousReseau = valideSousReseauIPv4(masque, ip.getReseauBin(), nbrHotes);
-//		int[][] lesSousReseau = sousReseau.trouverSousReseaux();
-//		for(int i = 0; i < lesSousReseau.length; i++)
-//		{
-//			System.out.println(nbrHotesDemande[i] + " : " + ip.convertirBinVersString(lesSousReseau[i]));
-//		}
-//	}
-	
+		}
+
+	}
+
+
 	//Valide la demande du nombre d'hotes avec le masque et creer un objet SousReseauxIPv4.
 	public static SousReseauxIPv4 valideSousReseauIPv4(Masque masque,int[] reseauBin, int[] nbrHotes)
 	{

@@ -9,8 +9,8 @@ public class IPv6 {
     //Initialisation
     private String ipString;					// l'adresse en string entree par l'utilisateur xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx
     private int prefix;                         //prefix indique le nombre de bits de la portie réseau
-    private final int INTERFACE_ID = 64;        //nombre de bits recommandé pour la partie hôtes (interfaceId)
-    private final int TOTAL_BITS_IPV6 = 128;    //total nombre de bits d'une adresse IPv6
+    public final int INTERFACE_ID = 64;        //nombre de bits recommandé pour la partie hôtes (interfaceId)
+    public final int TOTAL_BITS_IPV6 = 128;    //total nombre de bits d'une adresse IPv6
 
     //Constructeur
     public IPv6(String ipString, int prefix) {  //une adresse IPv6 doit être construit avec son ip et son préfix indiquant le nombre de bits pour la partie réseau
@@ -70,7 +70,7 @@ public class IPv6 {
     }
 
     private String obtientInterfaceIdHex() {
-        String ipv6SansPoints = obtientIPv6SansPoints();
+        String ipv6SansPoints = obtientIPv6SansPoints(this.ipString);
         String if_ID = "";
         for (int i = INTERFACE_ID/4; i< TOTAL_BITS_IPV6/4 ; i++) {
             if (i % 4 ==0 && i!=0)
@@ -102,7 +102,7 @@ public class IPv6 {
     }
 
     public String getPremierSousReseau() {
-        String IPv6SansPoints = obtientIPv6SansPoints();                        //obtient l'adresse IP sans ':'
+        String IPv6SansPoints = obtientIPv6SansPoints(this.ipString);                        //obtient l'adresse IP sans ':'
         String IPv6String = "";                                                 //déclare une chaîne de caratères vide
 
         for (int i = 0; i<this.prefix/4; i++) {                                 //Garder les bits de la partie réseau (préfix) dans la partie à gauche
@@ -225,7 +225,7 @@ public class IPv6 {
 
     public String adresseDernierSousReseau() {
         BigInteger zero = new BigInteger("0");                                  //obtient le valeur '0' en BigInteger (pour comparaison)
-        String IPv6SansPoints = obtientIPv6SansPoints();                            //obtient l'adresse IP en hexadécimal sans ':'
+        String IPv6SansPoints = obtientIPv6SansPoints(this.ipString);                            //obtient l'adresse IP en hexadécimal sans ':'
         String adresseDernierSousReseau = "";
 
         if (nbrSousreseauxDisponible().compareTo(zero)==1) {                      //S'il y a des sous-réseaux
@@ -255,18 +255,18 @@ public class IPv6 {
     }
 
 
-    private String obtientIPv6SansPoints () {                                   //fonction privée pour obtenir le IPv6 en chaîne de caractères sans ':'
+    public String obtientIPv6SansPoints (String ipStr) {                                   //fonction privée pour obtenir le IPv6 en chaîne de caractères sans ':'
         String IPv6SansPoints = "";                                             //déclare une chaîne de caratères vide
-        for (int i = 0; i<this.ipString.length(); i++) {                        //pour tous les caractères, si le caractère est ':', enlève le.
-            if (this.ipString.charAt(i)!=':')                                   //sauvegarde dans la nouvelle chaîne de caractères.
-                IPv6SansPoints += this.ipString.charAt(i);
+        for (int i = 0; i<ipStr.length(); i++) {                        //pour tous les caractères, si le caractère est ':', enlève le.
+            if (ipStr.charAt(i)!=':')                                   //sauvegarde dans la nouvelle chaîne de caractères.
+                IPv6SansPoints += ipStr.charAt(i);
         }
         return IPv6SansPoints;
     }
 
     public String getIPv6AddressReseauLong() {                                  //fonction pour obtenir l'adresse du réseau à partir d'une adresse IPv6
 
-        String IPv6SansPoints = obtientIPv6SansPoints();                        //obtient l'adresse IP sans ':'
+        String IPv6SansPoints = obtientIPv6SansPoints(this.ipString);                        //obtient l'adresse IP sans ':'
         String IPv6String = "";                                                 //déclare une chaîne de caratères vide
 
         for (int i = 0; i<this.prefix/4; i++) {                                 //Garder les bits de la partie réseau (préfix) dans la partie à gauche
@@ -387,7 +387,7 @@ public class IPv6 {
     }
 
     public String trouverDerniereAdresse() {
-        String IPv6SansPoints = obtientIPv6SansPoints();                            //obtient l'adresse IP en hexadécimal sans ':'
+        String IPv6SansPoints = obtientIPv6SansPoints(this.ipString);                            //obtient l'adresse IP en hexadécimal sans ':'
         String adresseDernier = "";
 
         for (int i=0; i<this.prefix/4-1;i++) {
@@ -430,7 +430,7 @@ public class IPv6 {
     }
 
     public boolean estLLA() {                                       //fe80::/3 - febx::/3 dans un LAN
-        String IPv6SansPoints = obtientIPv6SansPoints();            //obtient l'adresse IP sans ':'
+        String IPv6SansPoints = obtientIPv6SansPoints(this.ipString);            //obtient l'adresse IP sans ':'
         return (IPv6SansPoints.charAt(0) == 'f' &&
             IPv6SansPoints.charAt(1) == 'e' &&
             (IPv6SansPoints.charAt(2) == '8' ||
@@ -466,6 +466,49 @@ public class IPv6 {
        } else {
            return "false";
        }
+    }
+
+    public void afficherSousReseauxIPv6(int nbSousReseaux) {
+
+        //pour savoir combien de hexdigits pour la partie reseau
+        int nbDeBitsSousReseau = (int)(Math.ceil(Math.log(nbSousReseaux)/Math.log(2)))+ 1; //trouver nb de bits ça prend
+        System.out.println("NbBitsSousReseau: " + nbDeBitsSousReseau);
+        String nbTotalSousReseauBin = convertirDecABin(nbSousReseaux); //nbSousReseau binaire
+        String nbTotalSousReseauHex = convertirBinAHex(nbTotalSousReseauBin); //change to hex
+
+        //savoir combien de hexdigits chaque sous-reseau, ex. 1, 2, 3...
+        for (int i=0; i<nbSousReseaux; i++) {
+            String ipSousReseau = "";
+            String ipReseau = getIPv6AddressReseauLong();
+            String ipReseauSansPoints = obtientIPv6SansPoints(ipReseau);
+
+            String nbSousReseauBin = convertirDecABin(i); //nbSousReseau binaire
+            String nbSousReseauHex = convertirBinAHex(nbSousReseauBin); //change to hex
+            String hex = "";
+            for (int j=0; j<nbTotalSousReseauHex.length() - nbSousReseauHex.length(); j++) {
+                hex += '0';
+            }
+            hex += nbSousReseauHex;
+//            System.out.println("nbSousReseauBin: " + nbSousReseauBin);
+//            System.out.println("nbSousReseauHex: " + nbSousReseauHex);
+            for (int j=0; j<16 - nbTotalSousReseauHex.length(); j++) {
+                ipSousReseau += ipReseauSansPoints.charAt(j);
+            }
+            ipSousReseau += hex;
+            for (int j=INTERFACE_ID/4; j<TOTAL_BITS_IPV6/4; j++) {
+                ipSousReseau += "0";
+            }
+
+            String IPv6StrAvecPoints = "";                                              //mettre des ':'
+            for (int j=0; j<ipSousReseau.length(); j++) {
+                if (j%4==0 & j!=0) {
+                    IPv6StrAvecPoints += ':';
+                }
+                IPv6StrAvecPoints += ipSousReseau.charAt(j);
+            }
+
+            System.out.println("\n" + (i+1) + "e sous-réseau (longue) : " + IPv6StrAvecPoints + "\n" + (i+1) + "e sous-réseau (courte) : " + getIPv6LongToShort(new IPv6(IPv6StrAvecPoints, this.prefix)));
+        }
     }
 
 }
