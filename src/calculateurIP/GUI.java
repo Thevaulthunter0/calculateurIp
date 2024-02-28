@@ -1,12 +1,9 @@
 package calculateurIP;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.lang.String;
 import java.lang.Math;
-
-import static java.lang.String.valueOf;
 
 public class GUI {
 	
@@ -193,14 +190,10 @@ public class GUI {
 		{
 			while(!choixValide)
 			{
-				System.out.println("Qu'elle est le nombre d'hote utilisable pour le sous reseau " + (i + 1) + "?");
+				System.out.println("Qu'elle est le nombre d'hote UTILISABLE pour le sous reseau " + (i + 1) + "?");
 				try {
 					nbrHotesDemande[i]= scan.nextInt() + 2;
-<<<<<<< HEAD
-					if(nbrHotesDemande[i] < 1)
-=======
 					if(nbrHotesDemande[i] < 3)
->>>>>>> 439a99f8e7404a5afd06f0586c0940e60bdc161c
 					{
 						System.out.println("Il doit avoir au moins 1 hote utilisable dans un sous reseau.");
 					}
@@ -218,10 +211,13 @@ public class GUI {
 		
 		int[] nbrHotes = convertirNombreHote(nbrHotesDemande);	//Convertir le nombre hote demande vers le nombre hote reel
 		SousReseauxIPv4 sousReseau = valideSousReseauIPv4(masque, ip.getReseauBin(), nbrHotes);	//Valider avant de creer l'objet
-		int[][] lesSousReseau = sousReseau.trouverSousReseaux();	//Matrice representant binairement chaque adresse de chaque sous-reseau
-		for(int i = 0; i < lesSousReseau.length; i++)
+		if(sousReseau != null)
 		{
-			System.out.println(nbrHotesDemande[i] + " : " + ip.convertirBinVersString(lesSousReseau[i]));	//Afficher chaque sous-reseau
+			int[][] lesSousReseau = sousReseau.trouverSousReseaux();	//Matrice representant binairement chaque adresse de chaque sous-reseau
+			for(int i = 0; i < lesSousReseau.length; i++)
+			{
+				System.out.println(nbrHotesDemande[i] + " : " + ip.convertirBinVersString(lesSousReseau[i]));	//Afficher chaque sous-reseau
+			}
 		}
 	}
 	
@@ -287,7 +283,6 @@ public class GUI {
 		while(!choixValide)
 		{
 			System.out.println("Combien de sous reseaux voulez-vous faire?");
-//			try {
 				nbrSousReseau = scan.nextInt();
 
 				if(nbrSousReseau < 1) {
@@ -295,24 +290,16 @@ public class GUI {
 				}
 
 				else {
-
 					BigInteger nbSousReseauDispo = ipv6.nbrSousreseauxDisponible();
 					BigInteger nbSousReseauDispoBi = new BigInteger(String.valueOf(nbrSousReseau));
 					if (ipv6.nbrSousreseauxDisponible().compareTo(nbSousReseauDispoBi)==-1) {//si client demande plus que nbr de sous-réseaux disponible
 						System.out.println("Il y a seulement " + ipv6.nbrSousreseauxDisponibleFormatted(nbSousReseauDispo) + " disponibles");
 						continue;
 					} else {
-						System.out.println("I AM HERE");
 						ipv6.afficherSousReseauxIPv6(nbrSousReseau);
 						choixValide = true;
 					}
 				}
-
-//			} catch(Exception e)
-//			{
-//				System.out.println("Erreur," + e);
-//				scan.next();
-//			}
 		}
 
 	}
