@@ -25,10 +25,10 @@ public class IPv6 {
                 "Adresse IP (longue): " + afficheIPv6(this.ipString, this.prefix)
                 + "\nAdresse IP (courte) : " + afficheIPv6(getIPv6LongToShort(this), this.prefix)
 
-                + "\n\nNombre d'adresses d'hôtes disponibles : " + this.nbrHoteDisponible()
-                + "\nNombre d'adresses d'hôtes utilisables : " + this.nbrHoteDisponible()
+                + "\n\nNombre d'adresses d'hotes disponibles : " + this.nbrHoteDisponible()
+                + "\nNombre d'adresses d'hotes utilisables : " + this.nbrHoteDisponible()
 
-                + "\n\nAdresse du masque : Le terme 'préfix' est utilisé plutôt que 'masque' en IPv6."
+                + "\n\nAdresse du masque : Le terme 'prefix' est utilisé plutôt que 'masque' en IPv6."
                 + "\nPréfix : " + this.prefix
 
                 + "\n\nID d'interface (notation bar oblique) : /" + this.INTERFACE_ID + "(defaut)"
@@ -49,16 +49,16 @@ public class IPv6 {
                 + "\nAdresse de bouclage? : " + estBouclage()
                 + "\nAdresse est routable (GUA)? : " + estGUA()
 
-                + "\n\nSOUS-RÉSEAUX"
-                + "\nID de sous-réseau: " +  calculerSubnetId()
+                + "\n\nSOUS-ReSEAUX"
+                + "\nID de sous-reseau: " +  calculerSubnetId()
                 + "\nNombre de sous-réseaux disponibles : " + nbrSousreseauxDisponibleFormatted(nbrSousreseauxDisponible())
                 + "\nNombre d'adresses par sous-réseaux disponibles et utilisables : " +  nbrAdresseParSousreseau()
 
-                + "\n\nPremier sous-réseau (longue) : " + getPremierSousReseau()
-                + "\nPremier sous-réseau (courte): " + getIPv6LongToShort(new IPv6(getPremierSousReseau(), this.prefix))
+                + "\n\nPremier sous-reseau (longue) : " + getPremierSousReseau()
+                + "\nPremier sous-reseau (courte): " + getIPv6LongToShort(new IPv6(getPremierSousReseau(), this.prefix))
 
-                + "\n\nDernier sous-réseau (longue): " + adresseDernierSousReseau()
-                + "\nDernier sous-réseau (courte): " + getIPv6LongToShort(new IPv6(adresseDernierSousReseau(), this.prefix)));
+                + "\n\nDernier sous-reseau (longue): " + adresseDernierSousReseau()
+                + "\nDernier sous-reseau (courte): " + getIPv6LongToShort(new IPv6(adresseDernierSousReseau(), this.prefix)));
     }
 
     public String afficheIPv6(String ipString, int prefix) {

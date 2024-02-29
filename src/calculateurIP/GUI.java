@@ -9,7 +9,7 @@ public class GUI {
 	
 	static Scanner scan = new Scanner(System.in);
 	
-	static void debutGUI()
+	public static void debutGUI()
 	{
 		//Initialisation
 		int choix = 0;
@@ -74,12 +74,13 @@ public class GUI {
 			//Demande de IP
 			while(!choixValide)
 			{
-				System.out.println("Entrer votre addresse IPv4(xxx.xxx.xxx.xxx)");
+				System.out.println("Entrer votre adresse IPv4(xxx.xxx.xxx.xxx)");
 				try {
+					//ip = "172.16.0.0"
 					ip = scan.next();
 
 					if (!ip.matches("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}")) {  //ip doit avoir 3 places de nombres suivi par ':' et un dernier groupe de 3 places de nombres
-						System.out.println("Votre adresse doit avoir 4 octets en entiers, séparés par un point.");
+						System.out.println("Votre adresse doit avoir 4 octets en entiers, separes par un point.");
 						continue;
 
 						//si ip est dans le bon format, vérifie si les chiffres sont entre 0-255
@@ -92,7 +93,7 @@ public class GUI {
 
 						for (int i : ipSplitInt) {
 							if (i < 0 || i > 255) {							//vérifier que chaque octet est entre 0 et 255
-								System.out.println("Chaque octet doit être entre 0 et 255.");
+								System.out.println("Chaque octet doit etre entre 0 et 255.");
 								break;
 							} else  {
 								choixValide = true;
@@ -134,7 +135,7 @@ public class GUI {
 			String reponse = "";
 			while(!choixValide)
 			{
-				System.out.println("Voulez-vous faire des sous-reseau?(o-oui, n-non)");
+				System.out.println("Voulez-vous faire des sous-reseaux?(o-oui, n-non)");
 				try {
 					reponse = scan.next();
 					if(reponse.equals("o") && reponse.equals("n"))
@@ -167,12 +168,12 @@ public class GUI {
 		//Nombre de sous reseau
 		while(!choixValide)
 		{
-			System.out.println("Combien de sous reseaux voulez-vous faire?");
+			System.out.println("Combien de sous-reseaux voulez-vous faire?");
 			try {
 				nbrSousReseau = scan.nextInt();
 				if(nbrSousReseau < 1)
 				{
-					System.out.println("Erreur, il vous faut au moins 2 sous reseaux.");
+					System.out.println("Erreur, il vous faut au moins 2 sous-reseaux.");
 				}
 				else choixValide = true;
 			} catch(Exception e)
@@ -185,17 +186,17 @@ public class GUI {
 		//Demande du nombre d'hotes par sous-reseau
 		choixValide = false;
 		int[] nbrHotesDemande = new int[nbrSousReseau];
-		System.out.println("ne pas inclure l'adresse et diffusion");
+		System.out.println("ne pas inclure l'adresse reseau et l'adresse de diffusion");
 		for(int i = 0; i < nbrSousReseau; i++)
 		{
 			while(!choixValide)
 			{
-				System.out.println("Qu'elle est le nombre d'hote UTILISABLE pour le sous reseau " + (i + 1) + "?");
+				System.out.println("Qu'elle est le nombre d'hotes UTILISABLES pour le sous-reseau " + (i + 1) + "?");
 				try {
 					nbrHotesDemande[i]= scan.nextInt() + 2;
 					if(nbrHotesDemande[i] < 3)
 					{
-						System.out.println("Il doit avoir au moins 1 hote utilisable dans un sous reseau.");
+						System.out.println("Il doit y avoir au moins 1 hote utilisable dans un sous-reseau.");
 					}
 					else choixValide = true;
 				} catch(Exception e)
@@ -234,9 +235,9 @@ public class GUI {
 			//Demande de IP
 			while(!choixValide)
 			{
-				System.out.println("Entrer votre addresse IPv6(xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx)");
+				System.out.println("Entrer votre adresse IPv6(xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx)");
 				try {
-//					ip = "2001:0db8:85a3:0000:0000:8a2e:0370:7334"; //pour testing
+					//ip = "2001:0db8:85a3:0000:0000:8a2e:0370:7334"; //pour testing
 					ip = scan.next();
 
 					if (!ip.matches("^(?:[0-9a-fA-F$]{1,4}:){7}[0-9a-fA-F$]{1,4}")) {
@@ -254,12 +255,12 @@ public class GUI {
 			choixValide = false;
 			while(!choixValide)
 			{
-				System.out.println("Entrer votre préfixe. Un chiffre entre 1 et 128.");
+				System.out.println("Entrer votre prefixe. Un chiffre entre 1 et 128.");
 				try {
 					prefix = scan.nextInt();
 					if(prefix < 1 || prefix > 128)
 					{
-						System.out.println("Erreur, le masque n'est pas valide.");
+						System.out.println("Erreur, la longueur du prefixe n'est pas valide.");
 					}
 					else choixValide = true;
 				}catch(Exception e)
@@ -282,11 +283,11 @@ public class GUI {
 		//Nombre de sous reseau
 		while(!choixValide)
 		{
-			System.out.println("Combien de sous reseaux voulez-vous faire?");
+			System.out.println("Combien de sous-reseaux voulez-vous faire?");
 				nbrSousReseau = scan.nextInt();
 
 				if(nbrSousReseau < 1) {
-					System.out.println("Erreur, il vous faut au moins 2 sous reseaux.");
+					System.out.println("Erreur, il vous faut au moins 2 sous-reseaux.");
 				}
 
 				else {
@@ -323,7 +324,7 @@ public class GUI {
 		}
 		else
 		{
-			System.out.println("Vous demander trop d'hote pour le nombre hote disponible avec ce masque.");
+			System.out.println("Vous demander trop d'hotes pour le nombre hote disponible avec ce masque.");
 			return null;
 		}
 	}
