@@ -1,3 +1,7 @@
+/**
+ * Titre: IPv6.java;
+ * Description: Classe permetant de creer et utiliser les methodes necessaire pour trouver les informations d'une adresse IPv6.
+ */
 package calculateurIP;
 
 import java.math.BigInteger;

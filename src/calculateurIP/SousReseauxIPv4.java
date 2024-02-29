@@ -1,3 +1,7 @@
+/**
+ * Titre: SousReseauxIPv4.java;
+ * Description: Classe permetant de creer et utiliser les methodes necessaire pour construire des sous-reseaux IPv4.
+ */
 package calculateurIP;
 
 import java.lang.String;

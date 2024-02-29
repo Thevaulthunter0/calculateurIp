@@ -1,3 +1,7 @@
+/**
+ * Titre: GUI.java;
+ * Description: Classe definissant les methodes necessaires pour l'affichage des menus.
+ */
 package calculateurIP;
 
 import java.math.BigInteger;
@@ -217,7 +221,7 @@ public class GUI {
 			int[][] lesSousReseau = sousReseau.trouverSousReseaux();	//Matrice representant binairement chaque adresse de chaque sous-reseau
 			for(int i = 0; i < lesSousReseau.length; i++)
 			{
-				System.out.println(nbrHotesDemande[i] + " : " + ip.convertirBinVersString(lesSousReseau[i]));	//Afficher chaque sous-reseau
+				System.out.println(nbrHotesDemande[i] - 2 + " : " + ip.convertirBinVersString(lesSousReseau[i]) + "\\" + sousReseau.trouverMasque(nbrHotes[i]));	//Afficher chaque sous-reseau
 			}
 		}
 	}
