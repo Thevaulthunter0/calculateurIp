@@ -1,3 +1,7 @@
+/**
+ * Titre: IPv4.java;
+ * Description: Classe permetant de creer et utiliser les methodes necessaire pour trouver les informations d'une adresse IPv4.
+ */
 package calculateurIP;
 
 import java.lang.String;

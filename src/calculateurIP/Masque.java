@@ -1,3 +1,7 @@
+/**
+ * Titre: Masque.java;
+ * Description: Classe permetant de creer et utiliser les methodes necessaire pour trouver les informations d'un masque d'IPv4.
+ */
 package calculateurIP;
 
 import java.lang.String;
