@@ -1,6 +1,6 @@
 /**
  * Titre: IPv4.java;
- * Description: Classe permetant de creer et utiliser les methodes necessaire pour trouver les informations d'une adresse IPv4.
+ * Description: Classe permettant de creer et utiliser les methodes necessaires pour trouver les informations d'une adresse IPv4.
  */
 package calculateurIP;
 
@@ -15,7 +15,7 @@ public class IPv4 {
 	private int[] ipBin = new int[32];			// les 32 bits de l'adresse entree par l'utilisateur
 	private String reseauString;				// l'adresse reseau en string xxx.xxx.xxx.xxx
 	private int[] reseauBin = new int[32];		// les 32 bits de l'adresse reseau
-	private String[] strListe = new String[4];	// les 4 octets sous forme string
+	private String[] strListe = new String[4];	// les 4 octets string
 	
 	//Constructeur
 	public IPv4(String ipString, Masque masque)
@@ -27,7 +27,9 @@ public class IPv4 {
 		this.reseauString = convertirBinVersString(this.reseauBin);
 	}
 	
-	//Afficher les informations du calculateur
+	//Afficher les informations de l'adresse IPv4
+	//Entree: Rien
+	//Sortie: Rien
 	public void afficherInformation()
 	{
 		System.out.println("Nombre d'adresse disponible : " + masque.nbrHoteDisponible()
@@ -44,6 +46,8 @@ public class IPv4 {
 	
 	//Donne l'adresse de la premiere hote disponible
 	//La premiere adresse du reseau, est l'adresse reseau + 0...0001
+	//Entree: Rien
+	//Sortie: tableau binaire du reseau[32]
 	public int[] premiereAdresse()
 	{
 		int[] reponse = new int[32];	//Tableau a retourner
@@ -60,6 +64,8 @@ public class IPv4 {
 	
 	//Donne l'adresse de la derniere hote disponible
 	//La derniere adresse est l'adresse reseau + des 1 a partir du masque + 0 a la fin
+	//Entree: Rien
+	//Sortie: tableau binaire du reseau[32]
 	public int[] derniereAdresse()	
 	{
 		int[] reponse = new int[32];	//Tableau a retourner
@@ -79,6 +85,8 @@ public class IPv4 {
 	
 	//Donne l'adresse de diffusion du reseau
 	//L'adresse de diffusion est l'adresse reseau + des 1 a partir du masque
+	//Entree: Rien
+	//Sortie: Tableau bianire du reseau[32]
 	public int[] adresseDiffusion()
 	{
 		int[] reponse = new int[32];	//Tableau a retourner
@@ -96,7 +104,9 @@ public class IPv4 {
 		return reponse;
 	}
 	
-	//Determine si l'adresse ip est un adresse locale ou publique
+	//Determine si l'adresse ip est une adresse locale ou publique
+	//Entree: Rien
+	//Sortie: True = adresse est local, False = adresse est publique
 	public boolean estLocal()
 	{
 		//10.0.0.0
@@ -120,7 +130,9 @@ public class IPv4 {
 		}
 	}
 
-	//Determine si l'adresse est un adresse de bouclage
+	//Determine si l'adresse est une adresse de bouclage
+	//Entree: Rien
+	//Sortie: True = adresse est bouclage, False = adresse n'est pas bouclage
 	public boolean estBouclage()
 	{
 		//127.x.x.x
@@ -135,6 +147,8 @@ public class IPv4 {
 	}
 	
 	//Determine si l'adresse est une adresse Link-local(APIPA)
+	//Entree: Rien
+	//Sortie: True = adresse est linkLocal, False = adresse n'est pas linkLocal
 	public boolean estLinkLocal()
 	{
 		//169.254.x.x
@@ -151,6 +165,8 @@ public class IPv4 {
 	
 	//Faire une operation AND entre deux tableau[32]. Utiliser dans le constructeur
 	//pour avoir l'ip reseau en binaire.
+	//Entree: 2 tableau binaire[32]
+	//Sortie: un tableau  bianire[32]
 	private int[] operationAND(int[] bin1, int[] bin2)
 	{
 		int[] reponse = new int[32];	//Tableau a retourner
@@ -165,6 +181,8 @@ public class IPv4 {
 	}
 	
 	//Convertir IP(ipString) xxx.xxx.xxx.xxx vers un tableau[32] binaire.
+	//Entree: Rien
+	//Sortie: tableau binaire[32]
 	private int[] convertirStringVersBin()
 	{
 		double[] dListe = new double[4];	//Tableau de double pour separer les 4 octets
@@ -174,7 +192,7 @@ public class IPv4 {
 		for(int i = 0; i < dListe.length; i++)
 		{
 			dListe[i] = Double.parseDouble(strListe[i]);	//Transformer les 4 octets en double pour pouvoir les
-		}													//utiliser dans des calculs.
+		}													//utilisers dans des calculs.
 		
 		//Convertir chaque double en chiffre binaire
 		//et construit le chiffre binaire total.
@@ -182,8 +200,8 @@ public class IPv4 {
 		int binPosition = 0;	//Indique la position dans notre tableau binaire
 		for(int i = 0; i < dListe.length; i++)		//Pour chaque octet
 		{
-			int[] listeTemp = convertirDoubleVersBin(dListe[i]);	//Creer un tableau temporaire pour accueilir 8 chiffres binaires
-			for(int j = 0; j < listeTemp.length; j++)	//Pour chaque byte dans le tableau temporaire
+			int[] listeTemp = convertirDoubleVersBin(dListe[i]);	//Creer un tableau temporaire pour accueilir 8 chiffres binaire
+			for(int j = 0; j < listeTemp.length; j++)	//Pour chaque binaire dans le tableau temporaire
 			{
 				ipBin[binPosition] = listeTemp[j];	//Inserer dans notre tableau binaire les bytes du tableau temporaire
 				binPosition++;
@@ -193,10 +211,12 @@ public class IPv4 {
 	}
 	
 	//Convertir un octet double vers un binaire(Utiliser dans convertStringVersBin)
+	//Entree: un chiffre double
+	//Sortie: Tableau bianire[8]
 	private int[] convertirDoubleVersBin(double octet)
 	{
 		//Calculer le binaire d'un octet en utilisant la divsion succesive
-		double[] bitListe = new double[8];	//Tableau pour stocke les bits
+		double[] bitListe = new double[8];	//Tableau pour stocker les bits
 		for(int i = bitListe.length - 1; i >= 0; i--)	//Boucle de division succesive
 		{
 			if(octet % 2 == 0)	//Si la division du chiffre par 2 resulte a un chiffre x.0,
@@ -226,6 +246,8 @@ public class IPv4 {
 	}
 	
 	//Convertir un tableau[32] en binaire vers IP decimal xxx.xxx.xxx.xxx
+	//Entree: tableau binaire[32]
+	//Sortie: string du reseau
 	public String convertirBinVersString(int[] binaire)
 	{
 		String texte = "";
@@ -251,6 +273,8 @@ public class IPv4 {
 	}
 	
 	//Afficher un tableau[32] en binaire sous la forme xxxxxxxx.xxxxxxxx.xxxxxxxx.xxxxxxxx
+	//Entree: un tableau binaire[32]
+	//Sortie: string du reseau
 	public String afficherBin(int[] binaire)
 	{
 		String texte = "";

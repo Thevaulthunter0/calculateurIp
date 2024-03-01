@@ -13,6 +13,9 @@ public class GUI {
 	
 	static Scanner scan = new Scanner(System.in);
 	
+	//Premiere methode de menu appele dans le main. Elle appelle les autres methodes de menu.
+	//Entree:Rien
+	//Sortie:Rien
 	public static void debutGUI()
 	{
 		//Initialisation
@@ -65,6 +68,9 @@ public class GUI {
 		System.out.println("Application ferme");
 	}
 	
+	//Methode de menu pour la section IPv4. Elle est appelee dans la methode debutGUI().
+	//Entree:Rien
+	//Sortie:Rien
 	static void IPv4GUI()
 	{
 		//Initialisation
@@ -75,22 +81,22 @@ public class GUI {
 		
 		//Debut
 		do {
-			//Demande de IP
+			//Demande d'IP
 			while(!choixValide)
 			{
 				System.out.println("Entrer votre adresse IPv4(xxx.xxx.xxx.xxx)");
 				try {
-					//ip = "172.16.0.0"
+					//ip = "172.16.0.0"	
 					ip = scan.next();
 
 					if (!ip.matches("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}")) {  //ip doit avoir 3 places de nombres suivi par ':' et un dernier groupe de 3 places de nombres
 						System.out.println("Votre adresse doit avoir 4 octets en entiers, separes par un point.");
 						continue;
 
-						//si ip est dans le bon format, vérifie si les chiffres sont entre 0-255
+					//si l'ip a le bon format, vérifie si les chiffres sont entre 0-255
 					} else {
 						String[] ipSplit = ip.split("\\.");			//obtient un array de 4 octets en chaîne de caractères
-						int[] ipSplitInt = new int[ipSplit.length];			//obtient un array de 4 octets en entier
+						int[] ipSplitInt = new int[ipSplit.length];			//Creer un array de 4 octets en entier
 						for (int i=0; i< ipSplit.length; i++) {
 							ipSplitInt[i] = Integer.parseInt(ipSplit[i]);
 						}
@@ -119,7 +125,7 @@ public class GUI {
 				System.out.println("Entrer votre masque.");
 				try {
 					masque = scan.nextInt();
-					if(masque < 1 || masque > 31)
+					if(masque < 1 || masque > 31)	//Verification si le masque est entre 1 et 31
 					{
 						System.out.println("Erreur, le masque n'est pas valide.");
 					}
@@ -130,11 +136,11 @@ public class GUI {
 					scan.next();
 				}
 			}
-			Masque msq = new Masque(masque);
-			IPv4 ipv4 = new IPv4(ip, msq);
-			ipv4.afficherInformation();
+			Masque msq = new Masque(masque);	//Creation de l'objet masque
+			IPv4 ipv4 = new IPv4(ip, msq);		//Creation de l'objet IPv4
+			ipv4.afficherInformation();			//Afficher les informations demandes
 			
-			//Demande si l'utilisateur veut creer des sous-reseau
+			//Demande si l'utilisateur veut creer des sous-reseaux
 			choixValide = false;
 			String reponse = "";
 			while(!choixValide)
@@ -142,7 +148,7 @@ public class GUI {
 				System.out.println("Voulez-vous faire des sous-reseaux?(o-oui, n-non)");
 				try {
 					reponse = scan.next();
-					if(reponse.equals("o") && reponse.equals("n"))
+					if(reponse.equals("o") && reponse.equals("n"))		//Verification que l'utilisateur entre o ou n.
 					{
 						System.out.println("Erreur, repondre avec o(oui) ou n(non).");
 					}
@@ -155,27 +161,30 @@ public class GUI {
 			}
 			if(reponse.equals("o"))
 			{
-				sousReseauIPv4GUI(ipv4, msq);
+				sousReseauIPv4GUI(ipv4, msq);		//Appel de la methode permettant de creer des sous-reseaux
 			}
 			if(reponse.equals("n"))
 			{
-				break;
+				break;		//Sinon retourne menu principal
 			}
 		} while(choix != 0);
 	}
 	
+	//Methode de menu pour la sous-section IPv4 de creation de sous-reseau. Elle est appelee dans la methode IPv4GUI()
+	//Entree:IPv4 et Masque
+	//Sortie:Rien
 	static void sousReseauIPv4GUI(IPv4 ip, Masque masque)
 	{
 		boolean choixValide = false;
 		int nbrSousReseau = 1;
 		
-		//Nombre de sous reseau
+		//Nombre de sous-reseau
 		while(!choixValide)
 		{
 			System.out.println("Combien de sous-reseaux voulez-vous faire?");
 			try {
 				nbrSousReseau = scan.nextInt();
-				if(nbrSousReseau < 1)
+				if(nbrSousReseau < 1)			//Verification que l'utilisateur demande plus qu'un sous-reseau
 				{
 					System.out.println("Erreur, il vous faut au moins 2 sous-reseaux.");
 				}
@@ -198,7 +207,7 @@ public class GUI {
 				System.out.println("Qu'elle est le nombre d'hotes UTILISABLES pour le sous-reseau " + (i + 1) + "?");
 				try {
 					nbrHotesDemande[i]= scan.nextInt() + 2;
-					if(nbrHotesDemande[i] < 3)
+					if(nbrHotesDemande[i] < 3)		//Verification que l'utilisateur entre plus que 1 hote UTILISABLE
 					{
 						System.out.println("Il doit y avoir au moins 1 hote utilisable dans un sous-reseau.");
 					}
@@ -215,17 +224,20 @@ public class GUI {
 		nbrHotesDemande = triBulleInverse(nbrHotesDemande);		//Ordonne pour le calcul du VSML
 		
 		int[] nbrHotes = convertirNombreHote(nbrHotesDemande);	//Convertir le nombre hote demande vers le nombre hote reel
-		SousReseauxIPv4 sousReseau = valideSousReseauIPv4(masque, ip.getReseauBin(), nbrHotes);	//Valider avant de creer l'objet
-		if(sousReseau != null)
+		SousReseauxIPv4 sousReseau = valideSousReseauIPv4(masque, ip.getReseauBin(), nbrHotes);	//Valider et creer l'objet sousReseauIPv4
+		if(sousReseau != null)	//Si le nombre d'hote demande n'est pas valide, l'objet n'est pas creer donc retour au menu principal.
 		{
 			int[][] lesSousReseau = sousReseau.trouverSousReseaux();	//Matrice representant binairement chaque adresse de chaque sous-reseau
-			for(int i = 0; i < lesSousReseau.length; i++)
+			for(int i = 0; i < lesSousReseau.length; i++)	//Pour chaque sous-reseau dans la matrice
 			{
-				System.out.println(nbrHotesDemande[i] - 2 + " : " + ip.convertirBinVersString(lesSousReseau[i]) + "\\" + sousReseau.trouverMasque(nbrHotes[i]));	//Afficher chaque sous-reseau
+				System.out.println(nbrHotesDemande[i] - 2 + " : " + ip.convertirBinVersString(lesSousReseau[i]) + "\\" + sousReseau.trouverMasque(nbrHotes[i]));	//Afficher information
 			}
 		}
 	}
 	
+	//Methode de menu pour la section IPv6. Elle est appelee dans la methode debutGUI().
+	//Entree:Rien
+	//Sortie:Rien
 	static void IPv6GUI()
 	{
 		//Initialisation
@@ -236,7 +248,7 @@ public class GUI {
 
 		//Debut
 		do {
-			//Demande de IP
+			//Demande de l'IP
 			while(!choixValide)
 			{
 				System.out.println("Entrer votre adresse IPv6(xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx)");
@@ -273,13 +285,16 @@ public class GUI {
 					scan.next();
 				}
 			}
-			IPv6 ipv6 = new IPv6(ip, prefix);
-			ipv6.afficherInformation();
-			sousReseauIPv6GUI(ipv6);
+			IPv6 ipv6 = new IPv6(ip, prefix);	//Creation de l'objet IPv6
+			ipv6.afficherInformation();			//Afficher les informations
+			sousReseauIPv6GUI(ipv6);			//Methode pour calculer les sous-reseaux
 
 		} while(choix != 0);
 	}
 
+	//Methode de menu pour la sous-section IPv6 de creation de sous-reseau. Elle est appelee dans la methode IPv6GUI()
+	//Entree:IPv4 et Masque
+	//Sortie:Rien
 	static void sousReseauIPv6GUI(IPv6 ipv6)
 	{
 		boolean choixValide = false;
@@ -297,7 +312,7 @@ public class GUI {
 				else {
 					BigInteger nbSousReseauDispo = ipv6.nbrSousreseauxDisponible();
 					BigInteger nbSousReseauDispoBi = new BigInteger(String.valueOf(nbrSousReseau));
-					if (ipv6.nbrSousreseauxDisponible().compareTo(nbSousReseauDispoBi)==-1) {//si client demande plus que nbr de sous-réseaux disponible
+					if (ipv6.nbrSousreseauxDisponible().compareTo(nbSousReseauDispoBi)==-1) {//si le client demande plus que le nombre de sous-réseaux disponibles
 						System.out.println("Il y a seulement " + ipv6.nbrSousreseauxDisponibleFormatted(nbSousReseauDispo) + " disponibles");
 						continue;
 					} else {
@@ -309,12 +324,13 @@ public class GUI {
 
 	}
 
-
-	//Valide la demande du nombre d'hotes avec le masque et creer un objet SousReseauxIPv4.
+	//Valide la demande du nombre d'hotes avec le masque et creez un objet SousReseauxIPv4.
+	//Entree: Masque, l'ip reseau en binaire[32], nombre d'hotes[nombre sous-reseau]
+	//Sortie: Creation d'un objet SousReseauxIPv4 ou null
 	private static SousReseauxIPv4 valideSousReseauIPv4(Masque masque,int[] reseauBin, int[] nbrHotes)
 	{
 		int nbrHoteDemande = 0;
-		for(int i = 0; i < nbrHotes.length; i++)			//Calculer le nombre total hote
+		for(int i = 0; i < nbrHotes.length; i++)			//Calculer le nombre total d'hote
 		{													//demander par l'utilisateur
 			nbrHoteDemande += nbrHotes[i];		
 		}
@@ -335,6 +351,8 @@ public class GUI {
 	
 	//Permet de trouver le nombre d'hote qui sera reellement utiliser dans les sous-reseaux
 	//en utilisant l'arrondissement a la puissance 2 ex:200 hotes demandes = 256 hotes reellements utilises
+	//Entree: nombre d'hotes demande[nombre sous-reseau]
+	//Sortie: tableau du nombre d'hote[nombre sous-reseau]
 	private static int[] convertirNombreHote(int[] nbrHoteDemande)
 	{
 		int[] nbrHote = new int[nbrHoteDemande.length];
@@ -344,13 +362,15 @@ public class GUI {
 			double log = Math.log(nbrHoteDemande[i])/Math.log(2);
 			//Arrondir au plus grand pour trouver le chiffre supperieur
 			int hoteAvantPow = (int) Math.ceil(log);
-			//2 a l'exposant "chiffre arrondit"
+			//2 a l'exposant du "chiffre arrondit"
 			nbrHote[i] = (int) Math.pow(2,hoteAvantPow);
 		}
 		return nbrHote;
 	}
 	
-	//Permet de trier du plus grand au plus petit les inputs de l'utilisateurs avec la methode du tri par bulle
+	//Permet de trier du plus grand au plus petit les entrees de l'utilisateur avec la methode du tri par bulle
+	//Entree: nombre d'hotes demande[nombre sous-reseau]
+	//Sortie: tableau du nombre d'hote[nombre sous-reseau]
 	private static int[] triBulleInverse(int[] nbrHotesDemande)
 	{
 		int n = nbrHotesDemande.length;

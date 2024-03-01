@@ -1,6 +1,6 @@
 /**
  * Titre: SousReseauxIPv4.java;
- * Description: Classe permetant de creer et utiliser les methodes necessaire pour construire des sous-reseaux IPv4.
+ * Description: Classe permettant de creer et utiliser les methodes necessaires pour construire des sous-reseaux IPv4.
  */
 package calculateurIP;
 
@@ -20,47 +20,53 @@ public class SousReseauxIPv4 {
 		this.nbrHotes = nbrHotes;
 	}
 	
-	//Methode permettant de trouver les sous Reseaux et les stocker dans un tableau[nbrSousReseau][32].
+	//Methode permettant de trouver les sous-Reseaux et les stocker dans un tableau[nbrSousReseau][32].
+	//Entree: Rien
+	//Sortie: matrice[nombre hote][32]
 	public int[][] trouverSousReseaux()
 	{
-		int[][] adresseSousReseau = new int[nbrHotes.length][32];	//Tableau utiliser pour etre retourner contenant les sous reseaux 
-		adresseSousReseau[0] = this.reseauBin;		//Le premier plus gros sous reseau utilise l'adresse de base
-		for(int i = 1; i < nbrHotes.length; i++)	//Pour chaque sous reseau suivasnt demande
+		int[][] adresseSousReseau = new int[nbrHotes.length][32];	//Matrice utilise pour etre retourne contenant les sous-reseaux 
+		adresseSousReseau[0] = this.reseauBin;		//Le premier plus gros sous-reseau utilise l'adresse de base
+		for(int i = 1; i < nbrHotes.length; i++)	//Pour chaque sous-reseau suivant
 		{
-			//Additionne l'ip du sous reseau precedent au tableau du masque(construireTab) du sous reseau precedent
+			//Additionne l'ip du sous-reseau precedent au tableau du masque(construireTab) du sous-reseau precedent
 			adresseSousReseau[i] = additionBin(adresseSousReseau[i - 1], construireTab(trouverMasque(this.nbrHotes[i - 1])));
 		}
 		return adresseSousReseau;
 	}
 	
-	//Trouver le numero de masque a partir d'un nombre d'hotes
+	//Trouver le numero de masque a partir d'un nombre d'hote
+	//Entree: Chiffre du nombre d'hote
+	//Sortie: Chiffre du masque
 	public int trouverMasque(int nbrHote)
 	{																	//Utilise le calcul inverse pour trouver le
 		return 32 - (int)(Math.ceil(Math.log(nbrHote)/Math.log(2)));	//nombre d'hote a partir d'un masque.
 	}
 	
-	//Construire le tableau[32] du masque pour etre additionner au sous reseau d'avant
-	//ex:00000000.00000000.00000001.00000000 pour /24, indique la position du masque(masque - 1 parcqu'on commence a 0)
-	//                       
+	//Construire le tableau[32] du masque indiquant la position
+	//Entree: Chiffre du masque
+	//Sortie: Tablea binaire[32]
 	public int[] construireTab(int intMasque)
 	{
-		int[] reponse = new int[32];	//Tableau utilise pour etre retourner
+		int[] reponse = new int[32];	//Tableau utilise pour etre retourne
 		for(int i = 0; i < 32 ; i++)	//On parcour le tableau[32]
 		{
-			if(i == intMasque - 1)		//indique la position du masque
+			if(i == intMasque - 1)		//indique la position du masque (masque - 1 parcqu'on commence a 0)
 				
 			{							
-				reponse[i] = 1;			
+				reponse[i] = 1;			//Ajouter un 1 a la position du masque
 			}
 			else
 			{
-				reponse[i] = 0;
+				reponse[i] = 0;			//Sinon ajouter 0
 			}
 		}
 		return reponse;
 	}
 	
-	//Methode permettant d'effectuer une addition binaire entre deux tableau[] 
+	//Methode permettant d'effectuer une addition binaire entre deux tableaux[] 
+	//Entree: Deux tableaux binaire[32]
+	//Sortie: Un tableau binaire[32]
 	public int[] additionBin(int[] bin1, int[] bin2)
 	{
 		int retenue = 0;
