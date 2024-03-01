@@ -4,7 +4,7 @@
  * 				Permet aussi de creer des sous-reseaux.
  * Auteur: Sandra Ng
  * 		   Mathieu Premont-Picard
- * Video : https://www.youtube.com/watch?v=DFK-I_UNX6M
+ * Video : https://www.youtube.com/watch?v=aujLOiSwnEk
  */
 package calculateurIP;
 
