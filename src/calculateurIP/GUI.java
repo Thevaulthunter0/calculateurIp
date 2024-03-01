@@ -83,7 +83,7 @@ public class GUI {
 					//ip = "172.16.0.0"
 					ip = scan.next();
 
-					if (!ip.matches("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}")) {  //ip doit avoir 3 places de nombres suivi par ':' et un dernier groupe de 3 places de nombres
+					if (!ip.matches("^(?:[0-9]{3}\\.){3}[0-9]{3}")) {  //ip doit avoir 3 places de nombres suivi par ':' et un dernier groupe de 3 places de nombres
 						System.out.println("Votre adresse doit avoir 4 octets en entiers, separes par un point.");
 						continue;
 
@@ -195,21 +195,12 @@ public class GUI {
 		{
 			while(!choixValide)
 			{
-<<<<<<< HEAD
-				System.out.println("Qu'elle est le nombre d'hote pour le sous reseau " + i + "?");
+				System.out.println("Qu'elle est le nombre d'hote pour le sous reseau " + (i+1) + " ?");
 				try {
 					nbrHotesDemande[i]= scan.nextInt() + 2;
 					if(nbrHotesDemande[i] < 1)
 					{
 						System.out.println("Il doit avoir au moins 1 hote dans un sous reseau.");
-=======
-				System.out.println("Qu'elle est le nombre d'hotes UTILISABLES pour le sous-reseau " + (i + 1) + "?");
-				try {
-					nbrHotesDemande[i]= scan.nextInt() + 2;
-					if(nbrHotesDemande[i] < 3)
-					{
-						System.out.println("Il doit y avoir au moins 1 hote utilisable dans un sous-reseau.");
->>>>>>> origin/branchS
 					}
 					else choixValide = true;
 				} catch(Exception e)
@@ -253,7 +244,8 @@ public class GUI {
 					//ip = "2001:0db8:85a3:0000:0000:8a2e:0370:7334"; //pour testing
 					ip = scan.next();
 
-					if (!ip.matches("^(?:[0-9a-fA-F$]{1,4}:){7}[0-9a-fA-F$]{1,4}")) {
+					if (!ip.matches("^(?:[0-9a-fA-F$]{4}:){7}[0-9a-fA-F$]{4}")) {
+						System.out.println("Votre adresse doit avoir 8 hextets, separes par \':\'");
 						continue;
 					} else choixValide = true;
 
@@ -268,10 +260,10 @@ public class GUI {
 			choixValide = false;
 			while(!choixValide)
 			{
-				System.out.println("Entrer votre prefixe. Un chiffre entre 1 et 128.");
+				System.out.println("Entrer votre prefixe. Un chiffre entre 1 et 64.");
 				try {
 					prefix = scan.nextInt();
-					if(prefix < 1 || prefix > 128)
+					if(prefix < 1 || prefix > 64)
 					{
 						System.out.println("Erreur, la longueur du prefixe n'est pas valide.");
 					}
@@ -294,25 +286,35 @@ public class GUI {
 		boolean choixValide = false;
 		int nbrSousReseau = 1;
 		//Nombre de sous reseau
-		while(!choixValide)
+		while(!choixValide && ipv6.getPrefix()!=64)
 		{
 			System.out.println("Combien de sous-reseaux voulez-vous faire?");
 				nbrSousReseau = scan.nextInt();
-
-				if(nbrSousReseau < 1) {
-					System.out.println("Erreur, il vous faut au moins 2 sous-reseaux.");
-				}
-
-				else {
-					BigInteger nbSousReseauDispo = ipv6.nbrSousreseauxDisponible();
-					BigInteger nbSousReseauDispoBi = new BigInteger(String.valueOf(nbrSousReseau));
-					if (ipv6.nbrSousreseauxDisponible().compareTo(nbSousReseauDispoBi)==-1) {//si client demande plus que nbr de sous-réseaux disponible
-						System.out.println("Il y a seulement " + ipv6.nbrSousreseauxDisponibleFormatted(nbSousReseauDispo) + " disponibles");
-						continue;
+				try {
+					if (nbrSousReseau < 1) {
+						System.out.println("Erreur, il vous faut au moins 2 sous-reseaux.");
 					} else {
-						ipv6.afficherSousReseauxIPv6(nbrSousReseau);
-						choixValide = true;
+						BigInteger nbSousReseauDispo = ipv6.nbrSousreseauxDisponible();
+						BigInteger nbSousReseauDispoBi = new BigInteger(String.valueOf(nbrSousReseau));
+						if (ipv6.nbrSousreseauxDisponible().compareTo(nbSousReseauDispoBi) == -1) {//si client demande plus que nbr de sous-réseaux disponible
+							System.out.println("Il y a seulement " + StringIPv6.nbrSousreseauxDisponibleFormatted(nbSousReseauDispo) + ((nbSousReseauDispo.compareTo(new BigInteger("1")) == 0) ? " disponibles" : "disponible"));
+							continue;
+						} else {
+							String[] sousReseauxArray = ipv6.obtientSousReseauxIPv6(nbrSousReseau);
+							if (sousReseauxArray.length != 0) {
+								for (int i = 0; i < sousReseauxArray.length; i++) {
+									System.out.println("\n" + (i + 1) + "e sous-réseau (longue) : " + sousReseauxArray[i] + "\n" + (i + 1)
+											+ "e sous-réseau (courte) : " + ipv6.getIPv6LongToShort(new IPv6(sousReseauxArray[i], ipv6.getPrefix())));
+								}
+							} else {
+								System.out.println("Aucuns sous-réseaux disponibles.");
+							}
+							choixValide = true;
+						}
 					}
+				} catch (Exception e) {
+					System.out.println("Erreur: " + e);
+					scan.next();
 				}
 		}
 
