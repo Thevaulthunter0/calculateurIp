@@ -193,16 +193,12 @@ public class GUI {
 		{
 			while(!choixValide)
 			{
-				System.out.println("Qu'elle est le nombre d'hote utilisable pour le sous reseau " + (i + 1) + "?");
+				System.out.println("Qu'elle est le nombre d'hote pour le sous reseau " + i + "?");
 				try {
 					nbrHotesDemande[i]= scan.nextInt() + 2;
-<<<<<<< HEAD
 					if(nbrHotesDemande[i] < 1)
-=======
-					if(nbrHotesDemande[i] < 3)
->>>>>>> 439a99f8e7404a5afd06f0586c0940e60bdc161c
 					{
-						System.out.println("Il doit avoir au moins 1 hote utilisable dans un sous reseau.");
+						System.out.println("Il doit avoir au moins 1 hote dans un sous reseau.");
 					}
 					else choixValide = true;
 				} catch(Exception e)
