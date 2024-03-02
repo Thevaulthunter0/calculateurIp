@@ -4,7 +4,7 @@ import java.math.BigInteger;
 
 public class Calcul {
 
-    public static String creerHexString(int start, int end, String hexDigit) {
+    public static String creerHexString(int start, int end, String hexDigit) { //cette fonction créer une chaîne de caractère hexDigit en spécifiant le début et la fin
         String hexStr = "";
         for (int i = start; i < end; i++) {
             hexStr += hexDigit;
@@ -43,37 +43,29 @@ public class Calcul {
         return newQuatreBitStr;
     }
 
-//    public static String trouverHexDigit(int num) {
-//        if (num % 4 == 0)  return "f";
-//        if (num % 4 == 1)  return "7";
-//        if (num % 4 == 2)  return "3";
-//        if (num % 4 == 3)  return "1";
-//        else return null;
-//    }
-
-    public static String convertirDecABin(int num) {
+    public static String convertirDecABin(int num) {                            //cette fonction convertit un entier en binaire
         String str = "";
-        int nbDeDigitBin = (int)(Math.floor(Math.log(num)/Math.log(2)));
-        for (int i=nbDeDigitBin; i>= 0; i--) {
-            if (num - (int)Math.pow(2,i) >= 0) {
-                str += "1";
-                num -= (int)Math.pow(2,i);
+        int nbDeDigitBin = (int)(Math.floor(Math.log(num)/Math.log(2)));        //donner le nb de caractères binaires
+        for (int i=nbDeDigitBin; i>= 0; i--) {                                  //pour chaque position binaire,
+            if (num - (int)Math.pow(2,i) >= 0) {                                //si le nombre ou restant est plus grand que 2 ^ i,
+                str += "1";                                                     //mettre binaire '1'
+                num -= (int)Math.pow(2,i);                                      //soustraire pour avoir le restant
             } else {
-                str += "0";
+                str += "0";                                                     //mettre binaire '0' si le nombre ou restant est plus petit que 2 ^ i
             }
         }
         return str;
     }
-    public static String convertirDecABin(BigInteger bi) {                  //obtient la forme binaire des BigInteger
+    public static String convertirDecABin(BigInteger bi) {                  //cette fonction convertit un Big Integer en binaire
         String str = "";
-        int nbDeDigitBin = bi.bitLength();
-        for (int i=nbDeDigitBin-1; i>= 0; i--) {
-            BigInteger pow2 = BigInteger.ONE.shiftLeft(i);
-            if (bi.compareTo(pow2)>=0) {
+        int nbDeDigitBin = bi.bitLength();                                  //obtient le longueur de bits du big integer
+        for (int i=nbDeDigitBin-1; i>= 0; i--) {                            //pour chaque bit, en order déscendant
+            BigInteger pow2 = BigInteger.ONE.shiftLeft(i);                  //2^i; BigInteger.ONE est le chiffre '1' et i est le nb de bits où '1'' est positionné dans la chaîne binaire, essentiellement donnant le valeur 2^î
+            if (bi.compareTo(pow2)>=0) {                                    //si bi >= pow2 => binaire '1'
                 str += "1";
-                bi = bi.subtract(pow2);
+                bi = bi.subtract(pow2);                                     //soustraire pow2 de bi pour obtenir le restant
             } else {
-                str += "0";
+                str += "0";                                                 //sinon bi < pow2 => binaire '0'
             }
         }
         return str;
@@ -82,36 +74,27 @@ public class Calcul {
         String str = "";
         int accumulator = 0;
 
-        for (int i = bin.length() - 1; i >= 0; i -= 4) {                //en groupes de 4 bits, le valeur du hexDigit est accumulé par accumulator
+        for (int i = bin.length() - 1; i >= 0; i -= 4) {                //en groupes de 4 bits, on itère les caractères de la chaîne binaire. Après chaque itération, i = i - 4;
             int power = 0;
             for (int j = 0; j < 4; j++) {
-                if (i - j >= 0 && bin.charAt(i - j) == '1') {
-                    accumulator += Math.pow(2, power);
+                if (i - j >= 0 && bin.charAt(i - j) == '1') {           //Si c'est un '1' à la position binaire,
+                    accumulator += Math.pow(2, power);                  //accumule 2 ^ power selon la position
                 }
                 power++;
             }
 
             if (accumulator >= 10 && accumulator <= 15) {
-                str = (char) ('a' + accumulator - 10) + str;                //convertir accumlateur en hexadécimal
+                str = (char) ('a' + accumulator - 10) + str;                //Si c'est un valeur entre 10-15, soustraire 10 et additionne 'a'(ASCII) pour avoir le bon caractère a-f. Append le caractère
             } else {
-                str = accumulator + str;
+                str = accumulator + str;                                    //sinon append le chiffre 0-9
             }
-
-            accumulator = 0;                                                //reset accumulator pour prochain itération
+            accumulator = 0;                                                //reset accumulator pour la prochaine itération
         }
         return str;
     }
 
-    public static int convertirHexDigitADec(char hexDigit) {                      //convertir un hexDigit en décimal
-        switch (hexDigit) {
-            case 'a': return 10;
-            case 'b': return 11;
-            case 'c': return 12;
-            case 'd': return 13;
-            case 'e': return 14;
-            case 'f': return 15;
-            default: return Character.digit(hexDigit, 16);             //retourner le caractère en entier
-        }
+    public static int convertirHexDigitADec(char hex) {                      //convertir un hexDigit en décimal
+        return Character.digit(hex, 16);
     }
 
 

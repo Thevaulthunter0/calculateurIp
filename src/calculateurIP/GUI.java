@@ -89,7 +89,7 @@ public class GUI {
 					//ip = "172.16.0.0"	
 					ip = scan.next();
 
-					if (!ip.matches("^(?:[0-9]{3}\\.){3}[0-9]{3}")) {  //ip doit avoir 3 places de nombres suivi par ':' et un dernier groupe de 3 places de nombres
+					if (!ip.matches("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}")) {  //ip doit avoir 3 places de nombres suivi par ':' et un dernier groupe de 3 places de nombres
 						System.out.println("Votre adresse doit avoir 4 octets en entiers, separes par un point.");
 						continue;
 

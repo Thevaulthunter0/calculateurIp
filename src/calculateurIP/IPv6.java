@@ -43,10 +43,10 @@ public class IPv6 {
                 + "\nID d'interface (notation hexadécimal) : " + obtientInterfaceIdHex()
 
                 + "\n\nAdresse reseau (longue) : " + obtientAdresseReseau()
-//                + "\nAdresse reseau (courte) : " + getIPv6LongToShort(new IPv6(obtientAdresseReseau(), this.prefix))
+                + "\nAdresse reseau (courte) : " + getIPv6LongToShort(new IPv6(obtientAdresseReseau(), this.prefix))
 
                 + "\n\nPremiere adresse (longue) : " + obtientPremiereAdresse()
-//                + "\nPremiere adresse (courte) : " + getIPv6LongToShort(new IPv6(obtientPremiereAdresse(), this.prefix))
+                + "\nPremiere adresse (courte) : " + getIPv6LongToShort(new IPv6(obtientPremiereAdresse(), this.prefix))
 
                 + "\n\nDerniere adresse (longue) : " + obtientDerniereAdresse()
                 + "\nDerniere adresse (courte) : " + getIPv6LongToShort(new IPv6(obtientDerniereAdresse(), this.prefix))
